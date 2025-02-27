@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Default"/>
+    <Units>
+      <Unit>
+        <Filename Value="dBaseCross.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="41" Y="21"/>
+        <UsageCount Value="28"/>
+      </Unit>
+      <Unit>
+        <Filename Value="dbaseeditor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="dBaseEditor"/>
+        <TopLine Value="151"/>
+        <CursorPos X="24" Y="181"/>
+        <UsageCount Value="28"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="tokenprocessor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="TokenProcessor"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="18"/>
+        <CursorPos X="88" Y="35"/>
+        <UsageCount Value="28"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="commentpreprocessor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CommentPreprocessor"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="134"/>
+        <CursorPos X="62" Y="148"/>
+        <UsageCount Value="28"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="globals.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="10" Y="17"/>
+        <UsageCount Value="23"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="29">
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="150" TopLine="134"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="75" Column="22" TopLine="51"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="146" Column="31" TopLine="122"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="26" TopLine="13"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="76" Column="29" TopLine="58"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="193" Column="3" TopLine="187"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="6" Column="21"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="105" TopLine="84"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="147" Column="26" TopLine="119"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="120" TopLine="106"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="141" Column="7" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="140" Column="36" TopLine="124"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="26" Column="20"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="141" Column="26" TopLine="125"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="19" Column="62"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="48" Column="25" TopLine="35"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="56" Column="26" TopLine="34"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="55" Column="57" TopLine="39"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="179" Column="22" TopLine="154"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="56" Column="26" TopLine="34"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="69" Column="5" TopLine="55"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="78" Column="23" TopLine="55"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="102" Column="23" TopLine="74"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="119" Column="22" TopLine="91"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="121" Column="23" TopLine="93"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="146" Column="40" TopLine="123"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="20" Column="32" TopLine="2"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="92" Column="42" TopLine="92"/>
+      </Position>
+      <Position>
+        <Filename Value="commentpreprocessor.pas"/>
+        <Caret Line="102" Column="42" TopLine="91"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

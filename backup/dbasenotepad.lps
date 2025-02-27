@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <PathDelim Value="\"/>
+    <Version Value="12"/>
+    <BuildModes Active="Release"/>
+    <Units>
+      <Unit>
+        <Filename Value="dbasenotepad.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <CursorPos X="39" Y="13"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit>
+      <Unit>
+        <Filename Value="test1.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form1"/>
+        <ResourceBaseClass Value="Form"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="25"/>
+        <CursorPos X="3" Y="55"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit>
+      <Unit>
+        <Filename Value="commentpreprocessor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="CommentPreprocessor"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="23"/>
+        <CursorPos X="20" Y="34"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit>
+      <Unit>
+        <Filename Value="tokenprocessor.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="TokenProcessor"/>
+        <EditorIndex Value="3"/>
+        <CursorPos X="22" Y="30"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit>
+      <Unit>
+        <Filename Value="test.pas"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="2"/>
+        <CursorPos X="5" Y="9"/>
+        <UsageCount Value="20"/>
+        <Loaded Value="True"/>
+        <DefaultSyntaxHighlighter Value="Delphi"/>
+      </Unit>
+    </Units>
+    <JumpHistory HistoryIndex="29">
+      <Position>
+        <Filename Value="dbasenotepad.lpr"/>
+        <Caret Line="7" Column="13"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="184" Column="22" TopLine="175"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="217" TopLine="183"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="3"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="189" Column="16" TopLine="172"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="210" Column="22" TopLine="193"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Column="16"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="227" Column="15" TopLine="193"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="211" Column="22" TopLine="194"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="215" Column="14" TopLine="194"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="213" Column="40" TopLine="194"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="216" Column="11" TopLine="194"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="220" Column="5" TopLine="194"/>
+      </Position>
+      <Position>
+        <Filename Value="tokenprocessor.pas"/>
+        <Caret Line="200" Column="16"/>
+      </Position>
+      <Position>
+        <Filename Value="dbasenotepad.lpr"/>
+        <Caret Line="9" Column="25"/>
+      </Position>
+      <Position>
+        <Filename Value="dbasenotepad.lpr"/>
+        <Caret Line="12" Column="39"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="8" Column="77"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="42" Column="3" TopLine="12"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="43" Column="3" TopLine="12"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="42" Column="3" TopLine="12"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="43" Column="3" TopLine="12"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="44" Column="3" TopLine="12"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="43" Column="3" TopLine="12"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="44" Column="3" TopLine="12"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="45" Column="3" TopLine="12"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="46" Column="3" TopLine="12"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="47" Column="3" TopLine="13"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="48" Column="3" TopLine="14"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="49" Column="3" TopLine="15"/>
+      </Position>
+      <Position>
+        <Filename Value="test1.pas"/>
+        <Caret Line="51" Column="3" TopLine="17"/>
+      </Position>
+    </JumpHistory>
+    <RunParams>
+      <FormatVersion Value="2"/>
+      <Modes ActiveMode=""/>
+    </RunParams>
+  </ProjectSession>
+</CONFIG>

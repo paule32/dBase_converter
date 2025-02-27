@@ -1,0 +1,13 @@
+lib/x86_64-win64/tokenprocessor.o
+lib/x86_64-win64/test1.ppu
+lib/x86_64-win64/test1.o
+lib/x86_64-win64/globals.ppu
+lib/x86_64-win64/globals.o
+lib/x86_64-win64/dbasenotepad.res
+lib/x86_64-win64/dbasenotepad.obj
+lib/x86_64-win64/dbasenotepad.o
+lib/x86_64-win64/tokenprocessor.ppu
+lib/x86_64-win64/dbaseeditor.ppu
+lib/x86_64-win64/dbaseeditor.o
+lib/x86_64-win64/commentpreprocessor.ppu
+lib/x86_64-win64/commentpreprocessor.o
