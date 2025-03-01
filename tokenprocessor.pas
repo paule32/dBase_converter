@@ -6,8 +6,17 @@ uses
   SysUtils, Classes;
 
 type
-  TTokenType = (ttKeyword, ttIdentifier, ttNumber, ttOperator, ttDelimiter, ttUnknown);
+  TTokenType = (
+    ttParameter,
+    ttKeyword,
+    ttIdentifier,
+    ttNumber,
+    ttOperator,
+    ttDelimiter,
+    ttUnknown
+  );
 
+  PToken = ^TToken;
   TToken = record
     TokenType: TTokenType;
     Value: string;
@@ -17,36 +26,104 @@ type
   TTokenLexer = class
   private
     FSource: TStringList;
+    FTokenList: TStringList;
     FCurrentLine, FCurrentColumn: Integer;
     function GetNextTokenFromLine(var Line: string): TToken;
   public
-    constructor Create;
+    constructor Create; overload;
+    constructor Create(s: string); overload;
     destructor Destroy; override;
     procedure LoadFromFile(const Filename: string);
     procedure LoadFromString(const SourceCode: string);
     function GetNextToken: TToken;
+
+    procedure addToken(s: string);
+    function  getTokenList: TStringList;
+    function  getSource: TStringList;
+    function  getLine: Integer;
+    function  getColumn: Integer;
   end;
 
-procedure TokenLexer(src: string);
+type
+  ENoError = class(Exception);
+
+function TokenLexer(src: string): string;
 implementation
-uses Dialogs;
+uses Dialogs, commentPreprocessor;
 
 const
-  Keywords: array[0..5] of string = ('local', 'class', 'endclass', 'if', 'else', 'endif');
-  Operators: set of Char = ['+', '-', '*', '/', '=', '<', '>', '!', ':'];
-  Delimiters: set of Char = [';', ',', '(', ')', '[', ']', '{', '}'];
+  Keywords: array[0..6] of string = (
+    'parameter',
+    'local',
+    'class',
+    'endclass',
+    'if',
+    'else',
+    'endif'
+  );
+  Operators : set of Char = ['+', '-', '*', '/', '=', '<', '>', '!', ':'];
+  Delimiters: set of Char = [
+    ';', ',', '.', '(', ')', '[', ']', '{', '}',
+    '$', '%', '#', '&', '"', '~', '@'
+  ];
 
 constructor TTokenLexer.Create;
 begin
-  FSource := TStringList.Create;
-  FCurrentLine := 0;
+  inherited Create;
+  FSource        := TStringList.Create;
+  FTokenList     := TStringList.Create;
+
+  FCurrentLine   := 0;
   FCurrentColumn := 1;
+end;
+
+constructor TTokenLexer.Create(s: string);
+begin
+  inherited Create;
+
+  FSource        := TStringList.Create;
+  FTokenList     := TStringList.Create;
+
+  FCurrentLine   := 0;
+  FCurrentColumn := 1;
+
+  LoadFromString(s);
 end;
 
 destructor TTokenLexer.Destroy;
 begin
+  FSource.Clear;
   FSource.Free;
+
+  FTokenList.Clear;
+  FTokenList.Free;
+
   inherited Destroy;
+end;
+
+procedure TTokenLexer.addToken(s: string);
+begin
+  FTokenList.add(s);
+end;
+
+function TTokenLexer.getLine: Integer;
+begin
+  result := FCurrentLine;
+end;
+
+function TTokenLexer.getColumn: Integer;
+begin
+  result := FCurrentColumn;
+end;
+
+function TTokenLexer.getSource: TStringList;
+begin
+  result := FSource;
+end;
+
+function TTokenLexer.getTokenList: TStringList;
+begin
+  result := FTokenList;
 end;
 
 procedure TTokenLexer.LoadFromFile(const Filename: string);
@@ -82,10 +159,10 @@ var
 begin
   Result.TokenType := ttUnknown;
   Result.Value := '';
-  Result.Line := FCurrentLine + 1;  // 1-basierte Zeilennummer
-  Result.Column := FCurrentColumn; // Spaltennummer speichern
+  Result.Line := FCurrentLine + 1;
+  Result.Column := FCurrentColumn;
 
-  // Leerzeilen überspringen
+  // Leerzeichen am Anfang entfernen
   Line := TrimLeft(Line);
   if Line = '' then Exit;
 
@@ -100,7 +177,7 @@ begin
     end;
 
     Delete(Line, 1, i - 1);
-    FCurrentColumn := FCurrentColumn + i - 1; // Spalte updaten
+    FCurrentColumn := FCurrentColumn + i - 1;
 
     if IsKeyword(CurrentToken) then
       Result.TokenType := ttKeyword
@@ -122,7 +199,7 @@ begin
     end;
 
     Delete(Line, 1, i - 1);
-    FCurrentColumn := FCurrentColumn + i - 1; // Spalte updaten
+    FCurrentColumn := FCurrentColumn + i - 1;
     Result.TokenType := ttNumber;
     Result.Value := CurrentToken;
     Exit;
@@ -147,32 +224,45 @@ begin
     Inc(FCurrentColumn);
     Exit;
   end;
+
+  // **Verhindert Endlosschleife: Zeichen entfernen, falls nichts erkannt wurde**
+  Delete(Line, 1, 1);
+  Inc(FCurrentColumn);
 end;
 
 // Holt das nächste Token aus dem gesamten Quelltext
 function TTokenLexer.GetNextToken: TToken;
 var
-  Line: string;
+  Line, OldLine: string;
 begin
   Result.TokenType := ttUnknown;
   Result.Value := '';
 
   while FCurrentLine < FSource.Count do
   begin
-    Line := Trim(FSource[FCurrentLine]);
+    Line := Trim(FSource[FCurrentLine]); // Hole die aktuelle Zeile
 
-    // Wenn die Zeile leer ist, zur nächsten Zeile springen
+    // Debug: Zeigt an, welche Zeile verarbeitet wird
+    //ShowMessage('Verarbeite Zeile ' + IntToStr(FCurrentLine) + ': ' + Line);
+
     if Line = '' then
     begin
-      Inc(FCurrentLine);
+      Inc(FCurrentLine); // Springe zur nächsten Zeile
       FCurrentColumn := 1;
       Continue;
     end;
 
-    // Token aus der aktuellen Zeile holen
+    OldLine := Line;  // Speichere vorherigen Zustand der Zeile
     Result := GetNextTokenFromLine(Line);
 
-    // Wenn die Zeile noch Tokens enthält, speichern wir sie zurück
+    // Falls sich die Zeile nicht geändert hat, aber kein Token erkannt wurde
+    if (Line = OldLine) and (Result.TokenType = ttUnknown) then
+    begin
+      Inc(FCurrentLine); // Springe trotzdem zur nächsten Zeile
+      Continue;
+    end;
+
+    // Falls noch Inhalt in `Line` übrig ist, speichern
     if Line <> '' then
       FSource[FCurrentLine] := Line
     else
@@ -184,42 +274,31 @@ begin
     if Result.TokenType <> ttUnknown then
       Exit;
   end;
+
+  Result.TokenType := ttUnknown; // End of File erreicht
 end;
 
-procedure TokenLexer(src: string);
+
+function TokenLexer(src: string): string;
 var
   Lexer: TTokenLexer;
   Token: TToken;
-//TestSource: string;
   txt: String;
 begin
-  Lexer := TTokenLexer.Create;
+  result := '';
+  Lexer  := TTokenLexer.Create;
   try
-    // Beispielcode ohne Kommentare
-    //TestSource :=
-    //  'program Test;' + sLineBreak +
-    //  'var x: Integer;' + sLineBreak +
-    //  'begin' + sLineBreak +
-    //  '  x := 10 + 5;' + sLineBreak +
-    //  '  if x > 10 then x := x - 1;' + sLineBreak +
-    //  'end.';
-
     Lexer.LoadFromString(src);
-    txt := '--- Tokenized Code ---';
     repeat
       Token := Lexer.GetNextToken;
       if Token.TokenType <> ttUnknown then
-        txt := txt + 'Token: '
-        + Token.Value
-        + ' ('
-        + IntToStr(Ord(Token.TokenType))
-        + ') at Line '
-        + IntToStr(Token.Line)
-        + ', Column '
-        + IntToStr(Token.Column);
-    until Token.TokenType = ttUnknown;
+      begin
+        Lexer.addToken(Token.Value);
+      end;
+    until (Token.TokenType = ttUnknown)
+    or    (Lexer.FCurrentLine >= Lexer.FSource.Count);
   finally
-    ShowMessage(txt);
+    result := Lexer.getTokenList.Text;
     Lexer.Free;
   end;
 end;

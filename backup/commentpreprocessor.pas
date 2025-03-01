@@ -13,7 +13,8 @@ type
     function RemoveComments(const Line: string): string;
     function RemoveMultilineComments(const Source: string): string;
   public
-    constructor Create;
+    constructor Create; overload;
+    constructor Create(s: string); overload;
     destructor Destroy; override;
     function LoadFromFile(const Filename: string): string;
     function LoadFromString(const SourceCode: string): string;
@@ -29,14 +30,26 @@ implementation
 
 constructor TCommentLexer.Create;
 begin
+  inherited Create;
+
   FSource := TStringList.Create;
   FProcessedSource := TStringList.Create;
+end;
+constructor TCommentLexer.Create(s: string);
+begin
+  inherited Create;
+
+  FSource := TStringList.Create;
+  FProcessedSource := TStringList.Create;
+
+  LoadFromString(s);
 end;
 
 destructor TCommentLexer.Destroy;
 begin
-  FSource.Free;
-  FProcessedSource.Free;
+  FreeAndNil(FSource);
+  FreeAndNil(FProcessedSource);
+
   inherited Destroy;
 end;
 
@@ -104,7 +117,11 @@ var
   i: Integer;
   Line: string;
 begin
-  FProcessedSource.Clear;
+  FProcessedSource := TStringList.Create;
+
+  // Prüfen, ob FSource existiert, bevor darauf zugegriffen wird
+  if not Assigned(FSource) then
+    raise Exception.Create('FSource wurde nicht initialisiert.');
 
   for i := 0 to FSource.Count - 1 do
   begin
@@ -146,7 +163,7 @@ begin
       ProcessedSource := Lexer.GetProcessedSource;
 
       ShowMessage(
-        '--- Code aus String ohne Kommentare ---'#10 +
+        '--- Code aus String ohne Kommentare ---' + #10 +
         ProcessedSource);
       result := ProcessedSource;
     except
@@ -160,7 +177,6 @@ begin
       end;
     end;
   finally
-    ShowMessage('Freeeee');
     Lexer.Free;
   end;
 end;

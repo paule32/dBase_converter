@@ -11,3 +11,6 @@ lib/x86_64-win64/dbaseeditor.ppu
 lib/x86_64-win64/dbaseeditor.o
 lib/x86_64-win64/commentpreprocessor.ppu
 lib/x86_64-win64/commentpreprocessor.o
+/backup
+/backup
+/lib

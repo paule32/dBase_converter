@@ -5,7 +5,7 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, ComCtrls, Menus, SynHighlighterPas, SynEdit;
+  Buttons, ComCtrls, Menus, SynHighlighterPas, SynEdit, SynPopupMenu;
 
 type
 
@@ -37,11 +37,13 @@ type
     Splitter1: TSplitter;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
+    StatusBar1: TStatusBar;
     SynEditDB: TSynEdit;
     SynEditPy: TSynEdit;
     SynEditPas: TSynEdit;
     SynEditCPP: TSynEdit;
     SynFreePascalSyn1: TSynFreePascalSyn;
+    SynPopupMenu1: TSynPopupMenu;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
@@ -72,7 +74,8 @@ implementation
 {$R *.lfm}
 
 uses
-  globals, commentpreprocessor, tokenprocessor;
+  globals, commentpreprocessor, tokenprocessor,
+  dBaseParser;
 
 { TForm1 }
 
@@ -104,12 +107,23 @@ end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
 begin
-  if key = KB_F1 then
-  begin
-    ShowMessage('help call');
-  end else
   if key = KB_F2 then
   begin
+    SpeedButton2Click(Sender);
+  end else
+  if key = KB_F1 then
+  begin
+    if Form1.ActiveControl = Button1 then
+    begin
+      ShowMessage('button 1 help');
+      exit;
+    end else
+    if form1.ActiveControl = Button2 then
+    begin
+      ShowMessage('button 2 help');
+      exit;
+    end else
+
     if Form1.ActiveControl = SynEditDB then
     begin
       ShowMessage('dbase syneditor');
@@ -174,12 +188,23 @@ end;
 
 procedure TForm1.SpeedButton2Click(Sender: TObject);
 var
-  src: string;
+  tok: TdBaseParser;
 begin
-  SetLength(src, Length(SynEditDB.Lines.Text)+255);
-  src := CommentLexer(SynEditDB.Lines.Text);
-  ShowMessage('token');
-  TokenLexer(src);
+  tok := TdBaseParser.Create(SynEditDB.Lines.Text);
+  try
+    try
+      tok.Parse;
+      tok.DisplayAST(TreeView1);
+    except
+      on E: Exception do
+      begin
+        ShowMessage(E.Message);
+      end;
+    end;
+  finally
+    ShowMessage('done.');
+    tok.Free;
+  end;
 end;
 
 procedure TForm1.SynEditDBChange(Sender: TObject);

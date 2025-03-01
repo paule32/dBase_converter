@@ -8,9 +8,9 @@
       <Unit>
         <Filename Value="dBaseCross.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="-1"/>
-        <CursorPos X="41" Y="21"/>
-        <UsageCount Value="28"/>
+        <CursorPos Y="23"/>
+        <UsageCount Value="119"/>
+        <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="dbaseeditor.pas"/>
@@ -19,9 +19,10 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="dBaseEditor"/>
-        <TopLine Value="151"/>
-        <CursorPos X="24" Y="181"/>
-        <UsageCount Value="28"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="182"/>
+        <CursorPos X="35" Y="196"/>
+        <UsageCount Value="119"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -29,155 +30,171 @@
         <Filename Value="tokenprocessor.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="TokenProcessor"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="1"/>
-        <TopLine Value="18"/>
-        <CursorPos X="23" Y="35"/>
-        <UsageCount Value="28"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="274"/>
+        <CursorPos X="6" Y="290"/>
+        <UsageCount Value="119"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="commentpreprocessor.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="CommentPreprocessor"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="134"/>
-        <CursorPos X="62" Y="148"/>
-        <UsageCount Value="28"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="125"/>
+        <CursorPos X="36" Y="127"/>
+        <UsageCount Value="119"/>
       </Unit>
       <Unit>
         <Filename Value="globals.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="17"/>
-        <UsageCount Value="23"/>
+        <UsageCount Value="114"/>
+      </Unit>
+      <Unit>
+        <Filename Value="dbaseparser.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="dBaseParser"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="255"/>
+        <CursorPos X="21" Y="81"/>
+        <UsageCount Value="92"/>
+        <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="75" Column="22" TopLine="51"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="315" Column="20" TopLine="288"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="146" Column="31" TopLine="122"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="331" Column="16" TopLine="303"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="26" TopLine="13"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="320" Column="9" TopLine="320"/>
       </Position>
       <Position>
-        <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="76" Column="29" TopLine="58"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="331" Column="18" TopLine="321"/>
       </Position>
       <Position>
-        <Filename Value="tokenprocessor.pas"/>
-        <Caret Line="193" Column="3" TopLine="187"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="372" Column="16" TopLine="344"/>
       </Position>
       <Position>
-        <Filename Value="tokenprocessor.pas"/>
-        <Caret Line="6" Column="21"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="257" Column="20" TopLine="241"/>
       </Position>
       <Position>
-        <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="105" TopLine="84"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="269" Column="22" TopLine="241"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="147" Column="26" TopLine="119"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="291" Column="20" TopLine="263"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="120" TopLine="106"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="297" Column="20" TopLine="269"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="141" Column="7" TopLine="124"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="306" Column="20" TopLine="278"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="140" Column="36" TopLine="124"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="315" Column="20" TopLine="288"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="26" Column="20"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="331" Column="18" TopLine="303"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="141" Column="26" TopLine="125"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="372" Column="16" TopLine="344"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="19" Column="62"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="312" Column="18" TopLine="360"/>
       </Position>
       <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="48" Column="25" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="56" Column="26" TopLine="34"/>
-      </Position>
-      <Position>
-        <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="55" Column="57" TopLine="39"/>
-      </Position>
-      <Position>
-        <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="179" Column="22" TopLine="154"/>
-      </Position>
-      <Position>
-        <Filename Value="dbaseeditor.pas"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="56" Column="26" TopLine="34"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="69" Column="5" TopLine="55"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="78" Column="23" TopLine="55"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="102" Column="23" TopLine="74"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="119" Column="22" TopLine="91"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="121" Column="23" TopLine="93"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="146" Column="40" TopLine="123"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="20" Column="32" TopLine="2"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="92" Column="42" TopLine="92"/>
-      </Position>
-      <Position>
-        <Filename Value="commentpreprocessor.pas"/>
-        <Caret Line="102" Column="42" TopLine="91"/>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="158" Column="32" TopLine="141"/>
       </Position>
       <Position>
         <Filename Value="tokenprocessor.pas"/>
-        <Caret Line="35" Column="88" TopLine="18"/>
+        <Caret Line="48" Column="31" TopLine="35"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="329" Column="17" TopLine="307"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="327" Column="13" TopLine="311"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="328" Column="10" TopLine="311"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="343" Column="12" TopLine="329"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="287" Column="6" TopLine="280"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="339" Column="11" TopLine="314"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="352" Column="13" TopLine="327"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="338" Column="7" TopLine="313"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="15" Column="12"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="262" Column="39" TopLine="234"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="342" Column="28" TopLine="185"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="274" Column="19" TopLine="251"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="89" Column="3" TopLine="74"/>
       </Position>
     </JumpHistory>
     <RunParams>
       <FormatVersion Value="2"/>
       <Modes ActiveMode=""/>
     </RunParams>
+    <HistoryLists>
+      <List Name="WorkingDirectory" Type="File" Count="1"/>
+      <List Name="LaunchingApplication" Type="File" Count="1">
+        <Item1 Value="C:\Windows\system32\cmd.exe /C ${TargetCmdLine}"/>
+      </List>
+      <List Name="CommandLineParameters" Count="1"/>
+    </HistoryLists>
   </ProjectSession>
 </CONFIG>

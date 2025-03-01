@@ -10,7 +10,7 @@ uses
   athreads,
   {$ENDIF}
   Interfaces, // this includes the LCL widgetset
-  Forms, dBaseEditor, TokenProcessor, CommentPreprocessor, globals;
+  Forms, dBaseEditor, TokenProcessor, CommentPreprocessor, globals, dBaseParser;
 
 {$R *.res}
 

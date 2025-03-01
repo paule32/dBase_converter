@@ -1,10 +1,10 @@
 object Form1: TForm1
-  Left = 73
-  Height = 446
-  Top = 85
+  Left = 74
+  Height = 471
+  Top = 138
   Width = 729
   Caption = 'Form1'
-  ClientHeight = 446
+  ClientHeight = 471
   ClientWidth = 729
   KeyPreview = True
   Menu = MainMenu1
@@ -501,12 +501,12 @@ object Form1: TForm1
   end
   object Panel2: TPanel
     Left = 0
-    Height = 271
+    Height = 264
     Top = 56
     Width = 146
     Align = alLeft
     Caption = 'Panel2'
-    ClientHeight = 271
+    ClientHeight = 264
     ClientWidth = 146
     TabOrder = 1
     object TreeView1: TTreeView
@@ -535,24 +535,24 @@ object Form1: TForm1
   end
   object Splitter1: TSplitter
     Left = 146
-    Height = 271
+    Height = 264
     Top = 56
     Width = 8
     Beveled = True
   end
   object Panel3: TPanel
     Left = 0
-    Height = 112
-    Top = 334
+    Height = 144
+    Top = 327
     Width = 729
     Align = alBottom
     Caption = 'Panel3'
-    ClientHeight = 112
+    ClientHeight = 144
     ClientWidth = 729
     TabOrder = 3
     object PageControl2: TPageControl
       Left = 1
-      Height = 110
+      Height = 142
       Top = 1
       Width = 727
       ActivePage = TabSheet5
@@ -561,22 +561,34 @@ object Form1: TForm1
       TabOrder = 0
       object TabSheet5: TTabSheet
         Caption = 'Messages'
-        ClientHeight = 82
+        ClientHeight = 114
         ClientWidth = 719
         object TreeView2: TTreeView
           Left = 0
-          Height = 82
+          Height = 91
           Top = 0
           Width = 719
           Align = alClient
           TabOrder = 0
+        end
+        object StatusBar1: TStatusBar
+          Left = 0
+          Height = 23
+          Top = 91
+          Width = 719
+          Panels = <          
+            item
+              Text = 'Ready.'
+              Width = 50
+            end>
+          SimplePanel = False
         end
       end
     end
   end
   object PageControl1: TPageControl
     Left = 154
-    Height = 271
+    Height = 264
     Top = 56
     Width = 445
     ActivePage = TabSheet1
@@ -592,11 +604,11 @@ object Form1: TForm1
     TabOrder = 4
     object TabSheet1: TTabSheet
       Caption = 'dBase Source'
-      ClientHeight = 242
+      ClientHeight = 235
       ClientWidth = 437
       inline SynEditDB: TSynEdit
         Left = 0
-        Height = 242
+        Height = 235
         Top = 0
         Width = 437
         Align = alClient
@@ -606,6 +618,7 @@ object Form1: TForm1
         Font.Quality = fqNonAntialiased
         ParentColor = False
         ParentFont = False
+        PopupMenu = SynPopupMenu1
         TabOrder = 0
         Gutter.Width = 57
         Gutter.MouseActions = <>
@@ -1121,11 +1134,11 @@ object Form1: TForm1
     end
     object TabSheet2: TTabSheet
       Caption = 'Python'
-      ClientHeight = 242
+      ClientHeight = 235
       ClientWidth = 437
       inline SynEditPy: TSynEdit
         Left = 0
-        Height = 242
+        Height = 235
         Top = 0
         Width = 437
         Align = alClient
@@ -1624,11 +1637,11 @@ object Form1: TForm1
     end
     object TabSheet3: TTabSheet
       Caption = 'Pascal'
-      ClientHeight = 242
+      ClientHeight = 235
       ClientWidth = 437
       inline SynEditPas: TSynEdit
         Left = 0
-        Height = 242
+        Height = 235
         Top = 0
         Width = 437
         Align = alClient
@@ -2127,11 +2140,11 @@ object Form1: TForm1
     end
     object TabSheet4: TTabSheet
       Caption = 'C / C++'
-      ClientHeight = 242
+      ClientHeight = 235
       ClientWidth = 437
       inline SynEditCPP: TSynEdit
         Left = 0
-        Height = 242
+        Height = 235
         Top = 0
         Width = 437
         Align = alClient
@@ -2633,7 +2646,7 @@ object Form1: TForm1
     Cursor = crVSplit
     Left = 0
     Height = 7
-    Top = 327
+    Top = 320
     Width = 729
     Align = alBottom
     Beveled = True
@@ -2641,11 +2654,11 @@ object Form1: TForm1
   end
   object Panel4: TPanel
     Left = 604
-    Height = 271
+    Height = 264
     Top = 56
     Width = 125
     Align = alClient
-    ClientHeight = 271
+    ClientHeight = 264
     ClientWidth = 125
     TabOrder = 6
     object Button1: TButton
@@ -2680,7 +2693,7 @@ object Form1: TForm1
   end
   object Splitter3: TSplitter
     Left = 599
-    Height = 271
+    Height = 264
     Top = 56
     Width = 5
   end
@@ -2732,5 +2745,9 @@ object Form1: TForm1
   object OpenDialog1: TOpenDialog
     Left = 328
     Top = 112
+  end
+  object SynPopupMenu1: TSynPopupMenu
+    Left = 457
+    Top = 29
   end
 end
