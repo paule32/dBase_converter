@@ -8,8 +8,8 @@
       <Unit>
         <Filename Value="dBaseCross.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos Y="23"/>
-        <UsageCount Value="119"/>
+        <CursorPos Y="17"/>
+        <UsageCount Value="169"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -20,9 +20,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="dBaseEditor"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="182"/>
-        <CursorPos X="35" Y="196"/>
-        <UsageCount Value="119"/>
+        <TopLine Value="180"/>
+        <CursorPos Y="197"/>
+        <UsageCount Value="169"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -31,9 +31,9 @@
         <IsPartOfProject Value="True"/>
         <UnitName Value="TokenProcessor"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="274"/>
-        <CursorPos X="6" Y="290"/>
-        <UsageCount Value="119"/>
+        <TopLine Value="17"/>
+        <CursorPos Y="51"/>
+        <UsageCount Value="169"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -43,14 +43,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="125"/>
         <CursorPos X="36" Y="127"/>
-        <UsageCount Value="119"/>
+        <UsageCount Value="169"/>
       </Unit>
       <Unit>
         <Filename Value="globals.pas"/>
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="10" Y="17"/>
-        <UsageCount Value="114"/>
+        <UsageCount Value="164"/>
       </Unit>
       <Unit>
         <Filename Value="dbaseparser.pas"/>
@@ -58,131 +58,132 @@
         <UnitName Value="dBaseParser"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="255"/>
-        <CursorPos X="21" Y="81"/>
-        <UsageCount Value="92"/>
+        <TopLine Value="86"/>
+        <CursorPos X="12" Y="103"/>
+        <UsageCount Value="142"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="315" Column="20" TopLine="288"/>
+        <Caret Line="411" Column="12" TopLine="383"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="331" Column="16" TopLine="303"/>
+        <Caret Line="438" Column="14" TopLine="410"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="320" Column="9" TopLine="320"/>
+        <Caret Line="443" Column="14" TopLine="415"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="331" Column="18" TopLine="321"/>
+        <Caret Line="475" Column="18" TopLine="447"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="372" Column="16" TopLine="344"/>
+        <Caret Line="487" Column="24" TopLine="459"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="257" Column="20" TopLine="241"/>
+        <Caret Line="500" Column="24" TopLine="472"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="269" Column="22" TopLine="241"/>
+        <Caret Line="622" Column="22" TopLine="594"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="291" Column="20" TopLine="263"/>
+        <Caret Line="642" Column="26" TopLine="614"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="297" Column="20" TopLine="269"/>
+        <Caret Line="650" Column="28" TopLine="622"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="306" Column="20" TopLine="278"/>
+        <Caret Line="681" Column="22" TopLine="653"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="315" Column="20" TopLine="288"/>
+        <Caret Line="690" Column="18" TopLine="662"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="331" Column="18" TopLine="303"/>
+        <Caret Line="712" Column="14" TopLine="684"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="372" Column="16" TopLine="344"/>
+        <Caret Line="723" Column="16" TopLine="695"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="312" Column="18" TopLine="360"/>
+        <Caret Line="730" Column="22" TopLine="703"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="158" Column="32" TopLine="141"/>
-      </Position>
-      <Position>
-        <Filename Value="tokenprocessor.pas"/>
-        <Caret Line="48" Column="31" TopLine="35"/>
+        <Caret Line="739" Column="22" TopLine="712"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="329" Column="17" TopLine="307"/>
+        <Caret Line="743" Column="24" TopLine="716"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="327" Column="13" TopLine="311"/>
+        <Caret Line="752" Column="26" TopLine="725"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="328" Column="10" TopLine="311"/>
+        <Caret Line="755" Column="26" TopLine="728"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="343" Column="12" TopLine="329"/>
+        <Caret Line="771" Column="24" TopLine="744"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="287" Column="6" TopLine="280"/>
+        <Caret Line="785" Column="22" TopLine="758"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="339" Column="11" TopLine="314"/>
+        <Caret Line="798" Column="22" TopLine="771"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="352" Column="13" TopLine="327"/>
+        <Caret Line="813" Column="20" TopLine="786"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="338" Column="7" TopLine="313"/>
+        <Caret Line="822" Column="22" TopLine="795"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
+        <Caret Line="835" Column="22" TopLine="808"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="15" Column="12"/>
+        <Caret Line="869" Column="12" TopLine="841"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="262" Column="39" TopLine="234"/>
+        <Caret Line="915" Column="20" TopLine="887"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="342" Column="28" TopLine="185"/>
+        <Caret Line="918" Column="22" TopLine="890"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="274" Column="19" TopLine="251"/>
+        <Caret Line="935" Column="18" TopLine="907"/>
       </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
-        <Caret Line="89" Column="3" TopLine="74"/>
+        <Caret Line="968" Column="20" TopLine="940"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="974" Column="20" TopLine="946"/>
       </Position>
     </JumpHistory>
     <RunParams>

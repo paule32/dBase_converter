@@ -45,7 +45,7 @@ type
   end;
 
 type
-  ENoError = class exception;
+  ENoError = class(Exception);
 
 function TokenLexer(src: string): string;
 implementation

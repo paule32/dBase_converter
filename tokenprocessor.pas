@@ -8,6 +8,7 @@ uses
 type
   TTokenType = (
     ttParameter,
+    ttLocal,
     ttKeyword,
     ttIdentifier,
     ttNumber,

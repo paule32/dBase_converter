@@ -194,7 +194,6 @@ begin
   try
     try
       tok.Parse;
-      tok.DisplayAST(TreeView1);
     except
       on E: Exception do
       begin

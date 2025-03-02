@@ -8,99 +8,43 @@ uses
   Generics.Collections;
 
 type
-  TASTNodeType = (
-    ntProgram,
-    ntKeyWord,
-    ntParameter,
-    ntLocal,
-    ntStatement,
-    ntIf,
-    ntClass,
-    ntEndClass,
-    ntExpression,
-    ntNewInstance
-  );
-
-  TASTNode = class
-  public
-    NodeType: TASTNodeType;
-    Children: TList;
-    Value: string;
-    constructor Create(AType: TASTNodeType; AValue: string = '');
-    destructor Destroy; override;
-    procedure AddToTreeView(ParentNode: TTreeNode; TreeView: TTreeView);
-  end;
-
   TdBaseParser = class
   private
     FTokens: TStringList;
     FCurrentIndex: Integer;
-    FAST: TASTNode;
     FTokenDictionary: TDictionary<string, TTokenType>;
-    FTokenContext: TASTNodeType;
+    FTokenContext: TTokenType;
     function GetCurrentToken: TToken;
 
     function Match(ExpectedType: TTokenType): Boolean;
+    function TokenTypeToString(TokenType: TTokenType): string;
+
     procedure SyntaxError(Expected: string);
 
     function check_keyword: Boolean;
     function check_delimiter: boolean;
-    function check_chars(const TokenStr: string): Boolean;
 
-    function ParseParameterLocalStatement(flag: Integer): TASTNode;
-    function ParseStatement: TASTNode;
-    function ParseIfStatement: TASTNode;
-    function ParseClassDeclaration: TASTNode;
-    function ParseNewInstance: TASTNode;
-    function ParseAssignment: TASTNode;
+    function check_chars (const TokenStr: string): Boolean;
+    function check_number(var   TokenStr: string): Boolean;
+
+    function ParseStatement: boolean;
+    function ParseIfStatement: boolean;
+    function ParseClassDeclaration: boolean;
   public
     constructor Create(src: String);
     destructor Destroy; override;
-    function Parse: TASTNode;
-    procedure DisplayAST(TreeView: TTreeView);
+    function Parse: boolean;
   end;
 
 implementation
-
-uses Dialogs, CommentPreprocessor;
-
-constructor TASTNode.Create(AType: TASTNodeType; AValue: string = '');
-begin
-  NodeType := AType;
-  Value := AValue;
-  Children := TList.Create;
-end;
-
-destructor TASTNode.Destroy;
-var
-  i: Integer;
-begin
-(*  for i := 0 to Children.Count - 1 do
-    TASTNode(Children[i]).Free;*)
-  Children.Free;
-  inherited Destroy;
-end;
-
-procedure TASTNode.AddToTreeView(ParentNode: TTreeNode; TreeView: TTreeView);
-var
-  Node: TTreeNode;
-  i: Integer;
-begin
-(*  if ParentNode = nil then
-    Node := TreeView.Items.Add(nil, Value)
-  else
-    Node := TreeView.Items.AddChild(ParentNode, Value);
-
-  for i := 0 to Children.Count - 1 do
-    TASTNode(Children[i]).AddToTreeView(Node, TreeView);  *)
-end;
+uses
+  Dialogs, CommentPreprocessor;
 
 constructor TdBaseParser.Create(src: String);
 begin
   FTokens := TStringList.Create;
   FTokens.Text  := TokenLexer(CommentLexer(src));
   FCurrentIndex := 0;
-  FAST := TASTNode.Create(ntProgram, 'Program');
 
   FTokenDictionary := TDictionary<string, TTokenType>.Create;
   FTokenDictionary.Add('parameter', ttkeyword);
@@ -124,8 +68,23 @@ end;
 destructor TdBaseParser.Destroy;
 begin
   FTokens.Free;
-  FAST.Free;
   inherited Destroy;
+end;
+
+function TdBaseParser.TokenTypeToString(TokenType: TTokenType): string;
+begin
+  case TokenType of
+    ttParameter:  Result := 'ttParameter';
+    ttLocal:      Result := 'ttLocal';
+    ttKeyword:    Result := 'ttKeyword';
+    ttIdentifier: Result := 'ttIdentifier';
+    ttNumber:     Result := 'ttNumber';
+    ttOperator:   Result := 'ttOperator';
+    ttDelimiter:  Result := 'ttDelimiter';
+    ttUnknown:    Result := 'ttUnknown';
+  else
+    Result := 'Unbekannt';
+  end;
 end;
 
 function TdBaseParser.check_chars(const TokenStr: string): Boolean;
@@ -133,6 +92,34 @@ begin
   result := true;
   if not (TokenStr[1] in ['A'..'Z', 'a'..'z', '_']) then
   SyntaxError('unknown character found: ' + TokenStr[1]);
+end;
+
+function TdBaseParser.check_number(var TokenStr: string): Boolean;
+var
+  DummyFloat: Double;
+  i: integer;
+  old: string;
+begin
+  //showmessage('OLD:  ' + TokenStr);
+  old := TokenStr;
+  Result := TryStrToFloat(TokenStr, DummyFloat);
+  if not Result then
+  begin
+    TokenStr := old;
+    Exit(false);
+  end;
+
+  // prüfe, ob der String nur aus Zahlen besteht:
+  for i := 1 to Length(TokenStr) do
+  begin
+    if not (TokenStr[i] in ['0'..'9', '.', '-', '+']) then
+    begin
+      TokenStr := old;
+      Exit(false);
+    end;
+  end;
+
+  Result := True;
 end;
 
 function TdBaseParser.check_keyword: Boolean;
@@ -176,7 +163,6 @@ function TdBaseParser.Match(ExpectedType: TTokenType): Boolean;
 begin
   if GetCurrentToken.TokenType = ExpectedType then
   begin
-    Inc(FCurrentIndex);
     Result := True;
   end
   else
@@ -189,27 +175,27 @@ begin
     [Expected, 1, 2]);
 end;
 
-function TdBaseParser.ParseIfStatement: TASTNode;
+function TdBaseParser.ParseIfStatement: boolean;
 begin
-  Result := TASTNode.Create(ntIf, 'If');
+  result := false;
   Match(ttKeyword); // if
   Match(ttDelimiter); // (
   Match(ttIdentifier); // Bedingung
   Match(ttDelimiter); // )
   while (GetCurrentToken.TokenType = ttKeyword) or (GetCurrentToken.Value <> 'endif') do
-    Result.Children.Add(ParseStatement);
+    Result := true;
   Match(ttKeyword); // endif
 end;
 
-function TdBaseParser.ParseClassDeclaration: TASTNode;
+function TdBaseParser.ParseClassDeclaration: boolean;
 begin
-  Result := TASTNode.Create(ntClass, 'Class');
+  result := false;
   Match(ttKeyword); // class
   Match(ttIdentifier); // Klassenname
   Match(ttKeyword); // of
   Match(ttIdentifier); // Basisklasse
   while (GetCurrentToken.TokenType <> ttKeyword) or (GetCurrentToken.Value <> 'endclass') do
-    Result.Children.Add(ParseStatement);
+    Result := true;
   Match(ttKeyword); // endclass
 end;
 
@@ -220,191 +206,512 @@ begin
   result := false;
 end;
 
-function TdBaseParser.ParseParameterLocalStatement(flag: Integer): TASTNode;
+
+function TdBaseParser.ParseStatement: boolean;
 var
-  AST, AST2: TASTNode;
-begin
-  Result := TASTNode.Create(ntkeyword, 'Parameter');
-  Match(ttIdentifier);
+  have_comma: Boolean = false;
+  have_param: Integer;
+  have_local: Integer;
+  have_paren: Integer;
+  have_expr : Integer;
 
-  while true do
+  dummyStr: string;
+
+  function ParseParameter: Boolean; forward;
+  function ParseLocal: Boolean; forward;
+  function ParseAssignment: Boolean; forward;
+  function ParseNewInstance: Boolean; forward;
+  function ParseExpression: Boolean; forward;
+
+  // LOCAL
+  function ParseLocal: boolean;
   begin
-    if GetCurrentToken.TokenType = ttkeyword then
+    result := false;
+
+    //showmessage('LOCAL-->  ' + GetCurrentToken.Value);
+
+    inc(have_local);
+
+    inc(FCurrentIndex);
+    if FCurrentIndex >= FTokens.Count then
     begin
-      Match(ttIdentifier);
-      inc(FCurrentIndex);
-
-      AST2 := TASTNode.Create(ntParameter, GetCurrentToken.Value);
-      Result.Children.Add(AST2);
-
-      while true do
-      begin
-        inc(FCurrentIndex);
-        if GetCurrentToken.Value = ',' then
-        begin
-          inc(FCurrentIndex);
-          if check_keyword   then SyntaxError('keyword not expected after delimiter.'  );
-          if check_delimiter then SyntaxError('double delimiter not expected there.');
-
-          if not check_chars(GetCurrentToken.Value) then
-          SyntaxError('parameter identifier have no valid name.');
-
-          AST2 := TASTNode.Create(ntParameter, GetCurrentToken.Value);
-          Result.Children.Add(AST2);
-          continue;
-        end else
-        begin
-          if GetCurrentToken.TokenType = ttKeyWord then
-          begin
-            if GetCurrentToken.Value = 'local' then
-            begin
-              showmessage('ooo> ' + GetCurrentToken.Value);
-              FTokenContext := ntLocal;
-              inc(FCurrentIndex);
-              Result := ParseParameterLocalStatement(1);
-            end;
-          end else if GetCurrentToken.TokenType = ttIdentifier then
-          begin
-            //showmessage('===> ' + GetCurrentToken.Value);
-          end else //if GetCurrentToken.TokenType = ttLocal then
-          begin
-            showmessage('localller');
-            FTokenContext := ntLocal;
-            inc(FCurrentIndex);
-            break;
-          end; (* else
-          begin
-            SyntaxError('COMMA or KEYWORD expected.');
-          end*)
-        end;
-      end;
+      if have_local < 1 then
+      SyntaxError('unterminated ssss keyword: LOCAL');
+      raise ENoError.Create('end of data.');
     end;
-    break;
-  end;
-end;
 
-function TdBaseParser.ParseStatement: TASTNode;
-begin
-  while true do
-  begin
-    if  (FCurrentIndex >= FTokens.Count) then
-    break;
-    case GetCurrentToken.TokenType of
-      ttKeyWord:
-        if GetCurrentToken.Value = 'parameter' then
+    if Match(ttDelimiter) and (GetCurrentToken.Value = ',') then
+    begin
+      have_local := 0;
+      inc(FCurrentIndex);
+      if FCurrentIndex >= FTokens.Count then
+      begin
+        SyntaxError('local data expected after comma.');
+        exit;
+      end;
+
+      if GetCurrentToken.TokenType = ttKeyWord then
+      begin
+        SyntaxError('keywords after comma not allowed there.');
+        exit;
+      end;
+
+      if check_chars(GetCurrentToken.Value) then
+      begin
+        Result := ParseLocal;
+        exit;
+      end else
+      begin
+        SyntaxError('unknown characcter found after command.');
+        exit;
+      end;
+    end else
+    if Match(ttKeyWord) then
+    begin
+      if have_param > 0 then
+      begin
+        if GetCurrentToken.TokenType = ttKeyWord then
         begin
-          //showmessage('parameter occured');
-          FTokenContext := ntParameter;
-          ParseParameterLocalStatement(0);
-        end else
-        if GetCurrentToken.Value = 'local' then
-        begin
-          //showmessage('local occured');
-          ParseParameterLocalStatement(1);
-        end else
-        if GetCurrentToken.Value = 'if' then
-          Result := ParseIfStatement
-        else if GetCurrentToken.Value = 'class' then
-          Result := ParseClassDeclaration
-        else if GetCurrentToken.Value = 'endclass' then
-        begin
-          showmessage('ende class');
-          FTokenContext := ntEndClass;
-          inc(FCurrentIndex);
-          if FCurrentIndex >= FTokens.Count then
+          // PARAMETER
+          if GetCurrentToken.Value = 'parameter' then
           begin
-            raise Exception.Create('---------------------- endclass reached -------------');
+            inc(FCurrentIndex);
+            if FCurrentIndex >= FTokens.Count then
+            begin
+              SyntaxError('parameter data expected.');
+              exit;
+            end else
+            begin
+              Result := ParseParameter;
+              exit;
+            end;
+          end else
+          // LOCAL
+          if GetCurrentToken.Value = 'local' then
+          begin
+            inc(FCurrentIndex);
+            if FCurrentIndex >= FTokens.Count then
+            begin
+              SyntaxError('local data expected.');
+              exit;
+            end else
+            begin
+              Result := ParseLocal;
+              exit;
+            end;
+          end else
+          begin
+            SyntaxError('unknown keyword found.');
             exit;
           end;
         end else
         begin
-          ShowMessage('-------> ' + GetCurrentToken.Value);
-          inc(FCurrentIndex);
-          if FCurrentIndex >= FTokens.Count then
-          break;
-          Result := TASTNode.Create(ntStatement, GetCurrentToken.Value);
-        end;
-      ttIdentifier:
-      begin
-        if FCurrentIndex >= FTokens.Count then
-        begin
-          raise Exception.Create('---------------------- endclass reached -------------');
+          Result := ParseLocal;
           exit;
         end;
-        if (FCurrentIndex + 1 < FTokens.Count) and (PToken(FTokens[FCurrentIndex + 1])^.TokenType = ttOperator)
-           and (PToken(FTokens[FCurrentIndex + 1])^.Value = '=') then
-          Result := ParseAssignment
-        else
-        begin
-          if FCurrentIndex < FTokens.Count then
-          break;
-          Result := TASTNode.Create(ntStatement, GetCurrentToken.Value);
-          Match(ttIdentifier);
-        end;
+      end;
+    end;
+  end;
+
+  // PARAMETER
+  function ParseParameter: boolean;
+  begin
+    result := false;
+
+    //showmessage('PARAMETER-->  ' + GetCurrentToken.Value);
+
+    inc(have_param);
+
+    inc(FCurrentIndex);
+    if FCurrentIndex >= FTokens.Count then
+    begin
+      if have_param < 1 then
+      SyntaxError('unterminated ssss keyword: PARAMETER');
+      raise ENoError.Create('end of data.');
+    end;
+
+    if Match(ttDelimiter) and (GetCurrentToken.Value = ',') then
+    begin
+      have_param := 0;
+      inc(FCurrentIndex);
+      if FCurrentIndex >= FTokens.Count then
+      begin
+        SyntaxError('parameter data expected after comma.');
+        exit;
+      end;
+
+      if GetCurrentToken.TokenType = ttKeyWord then
+      begin
+        SyntaxError('keywords after comma not allowed there.');
+        exit;
+      end;
+
+      if check_chars(GetCurrentToken.Value) then
+      begin
+        Result := ParseParameter;
+        exit;
       end else
       begin
-        if FTokenContext = ntLocal then
+        SyntaxError('unknown characcter found after commad.');
+        exit;
+      end;
+    end else
+    if Match(ttKeyWord) then
+    begin
+      if have_param > 0 then
+      begin
+        if GetCurrentToken.TokenType = ttKeyWord then
         begin
-          ShowMessage('--> ntLocal: ' + GetCurrentToken.Value);
-          inc(FCurrentIndex);
-          if FCurrentIndex >= FTokens.Count then
-          exit;
+          // PARAMETER
+          if GetCurrentToken.Value = 'parameter' then
+          begin
+            inc(FCurrentIndex);
+            if FCurrentIndex >= FTokens.Count then
+            begin
+              SyntaxError('parameter data expected.');
+              exit;
+            end else
+            begin
+              Result := ParseParameter;
+              exit;
+            end;
+          end else
+          // LOCAL
+          if GetCurrentToken.Value = 'local' then
+          begin
+            inc(FCurrentIndex);
+            if FCurrentIndex >= FTokens.Count then
+            begin
+              SyntaxError('local data expected.');
+              exit;
+            end else
+            begin
+              Result := ParseLocal;
+              exit;
+            end;
+          end else
+          begin
+            SyntaxError('unknown keywords.');
+            exit;
+          end;
         end else
         begin
-          SyntaxError('Anweisung erwartet');
+          Result := ParseParameter;
+          exit;
         end;
+      end;
+    end;
+  end;
+
+  // EXPR
+  // FUNC()
+  function ParseExpression: boolean;
+  label label_0001;
+  begin
+    result := false;
+    if GetCurrentToken.Value = ')' then
+    begin
+      dec(have_paren);
+      if have_paren < 1 then
+      begin
+        result := true;
+        exit;
+      end;
+    end;
+    //showmessage('tok:  ' + GetCurrentToken.Value);
+    dummystr := GetCurrentToken.Value;
+    if check_number(dummyStr) then
+    begin
+      inc(FCurrentIndex);
+      if FCurrentIndex >= FTokens.Count then
+      begin
+        SyntaxError('expression error.');
+        exit;
+      end;
+      label_0001:
+      //showMessage('>>>>> ' + GetCurrentToken.Value);
+      case GetCurrentToken.Value[1] of
+        '+': begin
+          inc(FCurrentIndex);
+          dummyStr := GetCurrentToken.Value;
+          if GetCurrentToken.Value = '(' then
+          begin
+            //showmessage('uff paren');
+            inc(have_paren);
+            inc(FCurrentIndex);
+            if FCurrentIndex >= FTokens.Count then
+            begin
+              SyntaxError('unterminated expr - no more data.');
+              exit;
+            end;
+
+            //showMessage('===>>>>> ' + GetCurrentToken.Value + #13#10 + inttostr(have_paren));
+            dummyStr := GetCurrentToken.Value;
+            if check_number(dummyStr) then
+            begin
+              //showmessage('nummser: ' + GetCurrentToken.Value);
+              inc(FCurrentIndex);
+              if FCurrentIndex >= FTokens.Count then
+              begin
+                SyntaxError('unterminated expr - no more data.');
+                exit;
+              end;
+              if GetCurrentToken.Value = ')' then
+              begin
+                //showmessage('kkkklllll uffffter');
+                dec(have_paren);
+                inc(FCurrentIndex);
+                //showmessage('Getter:  ' + GetCurrentToken.Value);
+                goto label_0001;
+              end;
+              inc(FCurrentIndex);
+              if FCurrentIndex >= FTokens.Count then
+              begin
+                raise ENoError.Create('end of data');
+                exit
+              end else
+              begin
+                goto label_0001;
+              end;
+            end;
+
+            if check_chars(GetCurrentToken.Value) then
+            begin
+              //showmessage('checker: ' + GetCurrentToken.Value);
+              inc(FCurrentIndex);
+              if FCurrentIndex >= FTokens.Count then
+              begin
+                SyntaxError('unterminated expr - no more data.');
+                exit;
+              end;
+              goto label_0001;
+            end;
+          end;
+
+          dummyStr := GetCurrentToken.Value;
+          if check_number(dummyStr) then
+          begin
+            //showmessage('number: ' + dummyStr);
+            inc(FCurrentIndex);
+            if FCurrentIndex >= FTokens.Count then
+            begin
+              raise ENoError.Create('end of data.');
+              exit;
+            end else
+            begin
+              goto label_0001;
+            end;
+          end;
+          if check_chars(GetCurrentToken.Value) then
+          begin
+            //showMessage('chars:  ' + GetCurrentToken.Value);
+            goto label_0001;
+          end;
+        end;
+        '.': begin
+        end;
+        '*': begin
+        end;
+        '/': begin
+        end;
+        '%': begin
+        end;
+        '^': begin
+        end;
+        ')': begin
+          //showmessage('oo-=> ' + inttostr(have_paren));
+          if have_paren > 0 then
+          begin
+            dec(have_paren);
+            inc(FCurrentIndex);
+            goto label_0001;
+          end else
+          if have_paren < 0 then
+          begin
+            //showmessage('kkkkll << 0');
+            have_paren := 0;
+            exit;
+          end else
+          begin
+            have_paren := 0;
+            SyntaxError('end parten');
+            exit;
+          end;
+        end
+        else begin
+          if check_chars(GetCurrentToken.Value) then
+          begin
+            //showmessage('chars: ' + GetCurrentToken.Value);
+            inc(FCurrentIndex);
+            goto label_0001;
+          end else
+          begin
+            SyntaxError('inknow chars');
+            exit;
+          end;
+        end;
+      end;
+    end else
+    if check_chars(GetCurrentToken.Value) then
+    begin
+      goto label_0001;
+    end;
+  end;
+
+  // F =
+  function ParseAssignment: boolean;
+  begin
+    result := false;
+    Match(ttIdentifier);
+    if not Match(ttOperator) or (GetCurrentToken.Value <> '=') then
+      SyntaxError('"=" erwartet');
+    Match(ttOperator);
+    if GetCurrentToken.TokenType = ttKeyword then
+      ParseNewInstance
+    else
+      Match(ttIdentifier);
+  end;
+
+  // F = NEW obj
+  function ParseNewInstance: boolean;
+  begin
+    ShowMessage('New Instance');
+    result := false;
+  end;
+begin
+  result := false;
+
+  have_param := 0;
+  have_local := 0;
+  have_paren := 0;
+  have_expr  := 0;
+
+  case GetCurrentToken.TokenType of
+    ttKeyWord:
+      begin
+        FTokenContext := ttKeyWord;
+        // PARAMETER
+        if GetCurrentToken.Value = 'parameter' then
+        begin
+          have_param := 0;
+          inc(FCurrentIndex);
+          if FCurrentIndex > FTokens.Count then
+          begin
+            if have_param < 1 then
+            begin
+              SyntaxError('unterminated keyword: PARAMETER');
+              exit;
+            end;
+          end;
+          ParseParameter;
+        end else
+        // LOCAL
+        if GetCurrentToken.Value = 'local' then
+        begin
+          have_local := 0;
+          inc(FCurrentIndex);
+          if FCurrentIndex > FTokens.Count then
+          begin
+            if have_local < 1 then
+            begin
+              SyntaxError('unterminated keyword: LOCAL');
+              exit;
+            end;
+          end;
+          ParseLocal;
+        end else
+        begin
+          //ShowMessage('>> ->>> ' + GetCurrentToken.Value);
+          if check_chars(GetCurrentToken.Value) then
+          begin
+            //ShowMessage('->>> ' + GetCurrentToken.Value);
+            exit;
+          end else
+          begin
+            SyntaxError('unknow commandddddd found.');
+            exit;
+          end;
+        end;
+      end;
+
+    else begin
+      if FCurrentIndex >= FTokens.Count then
+      raise ENoError.Create('end of data');
+
+      if check_chars(GetCurrentToken.Value) then
+      begin
+        //showmessage('prev paren: ' + inttostr(have_paren));
+        //showmessage('pp: ' + GetCurrentToken.Value);
+        inc(FCurrentIndex);
+        if GetCurrentToken.Value = '=' then
+        begin
+          inc(FCurrentIndex);
+          if FCurrentIndex >= FTokens.Count then
+          begin
+            SyntaxError('unterminated assignment.');
+            exit;
+          end else
+          begin
+            if GetCurrentToken.Value = 'new' then
+            begin
+              Result := ParseNewInstance;
+              exit;
+            end else
+            begin
+              Result := ParseAssignment;
+              exit;
+            end;
+          end;
+        end else
+
+        // FUNC()
+        if GetCurrentToken.Value = '(' then
+        begin
+          inc(have_paren);
+          inc(FCurrentIndex);
+          if FCurrentIndex >= FTokens.Count then
+          begin
+            SyntaxError('sssu  nterminated open paren.');
+            exit;
+          end;
+          //showmessage('open parrr EEE');
+          result := ParseExpression;
+          exit;
+        end else
+        if GetCurrentToken.Value = ')' then
+        begin
+          //showmessage(')()))))))))))))');
+          dec(have_paren);
+          if have_paren < 0 then
+          begin
+            SyntaxError('missing open paren');
+            exit;
+          end;
+        end else
+      end else
+      begin
+        SyntaxError('unknow commandddddd found.');
+        exit;
       end;
     end;
   end;
 end;
 
-function TdBaseParser.ParseAssignment: TASTNode;
+function TdBaseParser.Parse: boolean;
 begin
-  Result := TASTNode.Create(ntExpression, GetCurrentToken.Value + ' = ...');
-  Match(ttIdentifier);
-  if not Match(ttOperator) or (GetCurrentToken.Value <> '=') then
-    SyntaxError('"=" erwartet');
-  Match(ttOperator);
-  if GetCurrentToken.TokenType = ttKeyword then
-    Result := ParseNewInstance
-  else
-    Match(ttIdentifier);
-end;
-
-function TdBaseParser.ParseNewInstance: TASTNode;
-begin
-  Result := TASTNode.Create(ntNewInstance, 'New Instance');
-  Match(ttKeyword);
-  Match(ttIdentifier);
-  Match(ttDelimiter);
-  Match(ttDelimiter);
-end;
-
-function TdBaseParser.Parse: TASTNode;
-var
-  Node: TASTNode;
-begin
-  Result := FAST;
+  Result := false;
   while true do
   begin
     if (FCurrentIndex >= FTokens.Count) then
     begin
-      showmessage('-------------------');
-      break;
+      raise ENoError.Create('No more data');
+      exit;
+    end else
+    begin
+      ParseStatement;
+      continue;
     end;
-
-    Node := ParseStatement;
-    if Node <> nil then
-      FAST.Children.Add(Node);
-    break;
   end;
-end;
-
-procedure TdBaseParser.DisplayAST(TreeView: TTreeView);
-begin
-  TreeView.Items.Clear;
-  FAST.AddToTreeView(nil, TreeView);
-  TreeView.FullExpand;
 end;
 
 end.
