@@ -16,7 +16,32 @@ const KB_F10 = 121;
 const KB_F11 = 122;
 const KB_F12 = 123;
 
+function GetSystemLanguage: string;
+procedure LoadLanguage(const LangCode: string);
+
 implementation
+uses
+  SysUtils, LCLIntf, LCLType, LCLProc, Translations, GetText, Dialogs;
+
+function GetSystemLanguage: string;
+begin
+  Result := GetEnvironmentVariable('LANG');
+  if Result = '' then
+    Result := 'en'
+  else
+    Result := Copy(Result, 1, 2);
+end;
+
+procedure LoadLanguage(const LangCode: string);
+var
+  PoFilePath: string;
+begin
+  PoFilePath := ExtractFilePath(ParamStr(0)) + 'locale/' + LangCode + '.po';
+  if FileExists(PoFilePath) then
+    TranslateUnitResourceStrings('default', PoFilePath)
+  else
+    ShowMessage('translator file not found: ' + PoFilePath);
+end;
 
 end.
 
