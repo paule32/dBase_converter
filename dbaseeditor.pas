@@ -6,7 +6,7 @@ interface
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
   Buttons, ComCtrls, Menus, SynHighlighterPas, SynEdit, SynPopupMenu,
-  SynHighlighterAny;
+  globals, SynHighlighterAny;
 
 type
 
@@ -56,6 +56,7 @@ type
     procedure Button2Click(Sender: TObject);
     procedure ControlBar1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MenuItem1Click(Sender: TObject);
     procedure MenuItem8Click(Sender: TObject);
@@ -63,7 +64,6 @@ type
     procedure SpeedButton2Click(Sender: TObject);
     procedure SynEditDBChange(Sender: TObject);
   private
-
   public
 
   end;
@@ -76,9 +76,11 @@ implementation
 {$R *.lfm}
 
 uses
-  globals, commentpreprocessor, tokenprocessor,
+  commentpreprocessor, tokenprocessor,
   dBaseParser;
 
+resourcestring
+  rsDone = 'done.';
 { TForm1 }
 
 procedure TForm1.Button1Click(Sender: TObject);
@@ -109,7 +111,12 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  LoadLanguage('de');
+  ShowMessage(tr('done.'));
+end;
+
+procedure TForm1.FormDestroy(Sender: TObject);
+begin
+
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);

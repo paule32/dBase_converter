@@ -9,6 +9,7 @@ object Form1: TForm1
   KeyPreview = True
   Menu = MainMenu1
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   OnKeyUp = FormKeyUp
   LCLVersion = '3.4.0.0'
   Visible = True

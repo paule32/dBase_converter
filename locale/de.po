@@ -298,4 +298,4 @@ msgstr ""
     "GNU General Public License."
 
 msgid "done."
-msgtsr "fertig."
+msgstr "fertig."

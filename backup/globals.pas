@@ -2,6 +2,8 @@
 unit globals;
 
 interface
+uses
+  SysUtils, LCLIntf, LCLType, LCLProc, Translations, GetText, Dialogs;
 
 const KB_F1  = 112;
 const KB_F2  = 113;
@@ -16,32 +18,64 @@ const KB_F10 = 121;
 const KB_F11 = 122;
 const KB_F12 = 123;
 
-function GetSystemLanguage: string;
-procedure LoadLanguage(const LangCode: string);
+type
+  TMoTranslate = class(TMoFile)
+  private
+    FLangID: String;
+  public
+    constructor Create(ALang: String; ACheck: Boolean = false); overload;
+    destructor Destroy; override;
+    function getLangID: String;
+  end;
 
+function tr(AString: String): String;
 implementation
-uses
-  SysUtils, LCLIntf, LCLType, LCLProc, Translations, GetText, Dialogs;
 
-function GetSystemLanguage: string;
+var
+  motr: TMoTranslate;
+
+function tr(AString: String): String;
 begin
-  Result := GetEnvironmentVariable('LANG');
-  if Result = '' then
-    Result := 'en'
-  else
-    Result := Copy(Result, 1, 2);
+  if motr = nil then
+  motr := TMoTranslate.Create('de', false);
+  result := motr.Translate(AString);
 end;
 
-procedure LoadLanguage(const LangCode: string);
+constructor TMoTranslate.Create(ALang: String; ACheck: Boolean);
 var
-  PoFilePath: string;
+  filePath: String;
 begin
-  PoFilePath := ExtractFilePath(ParamStr(0)) + 'locale/' + LangCode + '.po';
-  if FileExists(PoFilePath) then
-    TranslateUnitResourceStrings('default', PoFilePath)
-  else
-    ShowMessage('translator file not found: ' + PoFilePath);
+  if ACheck then
+  begin
+    FLangID := GetEnvironmentVariable('LANG');
+    if FLangID = '' then
+    FLangID := 'en' else
+    FLangID := Copy(FLangID, 1, 2);
+  end else
+  begin
+    FLangID := ALang;
+  end;
+
+  filePath := ExtractFilePath(ParamStr(0)) + 'locale/' + FLangID + '.mo';
+  if FileExists(filePath) then
+  begin
+    showmessage(filePath);
+    inherited Create(filePath);
+  end else
+  begin
+    raise Exception.Create('translator file not found: ' + filePath);
+  end;
+end;
+
+destructor TMoTranslate.Destroy;
+begin
+end;
+
+function TMoTranslate.getLangID: String;
+begin
+  result := FLangID;
 end;
 
 end.
+
 

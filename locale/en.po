@@ -362,4 +362,4 @@ msgstr ""
     "Public License instead of this License."
 
 msgid "done."
-msgtsr "done."
+msgstr "done."
