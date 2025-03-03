@@ -21,7 +21,7 @@ procedure LoadLanguage(const LangCode: string);
 
 implementation
 uses
-  SysUtils, LCLIntf, LCLType, LCLProc, Translations, GetText;
+  SysUtils, LCLIntf, LCLType, LCLProc, Translations, GetText, Dialogs;
 
 function GetSystemLanguage: string;
 begin

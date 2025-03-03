@@ -5,7 +5,8 @@ interface
 
 uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, StdCtrls, ExtCtrls,
-  Buttons, ComCtrls, Menus, SynHighlighterPas, SynEdit, SynPopupMenu;
+  Buttons, ComCtrls, Menus, SynHighlighterPas, SynEdit, SynPopupMenu,
+  SynHighlighterAny;
 
 type
 
@@ -38,11 +39,11 @@ type
     Splitter2: TSplitter;
     Splitter3: TSplitter;
     StatusBar1: TStatusBar;
+    SynAnySyn1: TSynAnySyn;
     SynEditDB: TSynEdit;
     SynEditPy: TSynEdit;
     SynEditPas: TSynEdit;
     SynEditCPP: TSynEdit;
-    SynFreePascalSyn1: TSynFreePascalSyn;
     SynPopupMenu1: TSynPopupMenu;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
@@ -54,6 +55,7 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure ControlBar1Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MenuItem1Click(Sender: TObject);
     procedure MenuItem8Click(Sender: TObject);
@@ -103,6 +105,11 @@ end;
 procedure TForm1.ControlBar1Click(Sender: TObject);
 begin
 
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  LoadLanguage('de');
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -194,7 +201,6 @@ begin
   try
     try
       tok.Parse;
-      tok.DisplayAST(TreeView1);
     except
       on E: Exception do
       begin

@@ -7,6 +7,9 @@ uses
   SysUtils, Classes, TokenProcessor, ComCtrls,
   Generics.Collections;
 
+resourcestring
+  rsDone = 'done.';
+
 type
   TdBaseParser = class
   private
@@ -406,155 +409,160 @@ var
   // EXPR
   // FUNC()
   function ParseExpression: boolean;
+    procedure check_op;
+    begin
+      result := false;
+      case GetCurrentToken.Value[1] of
+        '+': begin
+          inc(FCurrentIndex);
+          result := ParseExpression;
+        end;
+        '-': begin
+          inc(FCurrentIndex);
+          result := ParseExpression;
+        end;
+        '*': begin
+          inc(FCurrentIndex);
+          result := ParseExpression;
+        end;
+        '/': begin
+          inc(FCurrentIndex);
+          result := ParseExpression;
+        end;
+        '%': begin
+          inc(FCurrentIndex);
+          result := ParseExpression;
+        end;
+        '^': begin
+          inc(FCurrentIndex);
+          result := ParseExpression;
+        end;
+        '(': begin
+          inc(have_paren);
+          inc(FCurrentIndex);
+          result := ParseExpression;
+          exit;
+        end;
+        ')': begin
+          dec(have_paren);
+          if have_paren = 0 then
+          begin
+            //showmessage('clos paren');
+            inc(FCurrentIndex);
+            if FCurrentIndex >= FTokens.Count then
+            begin
+              raise ENoError.Create('no more data');
+              exit;
+            end;
+            exit;
+          end else
+          begin
+            inc(FCurrentIndex);
+            if FCurrentIndex >= FTokens.Count then
+            begin
+              SyntaxError('expr error');
+              exit;
+            end;
+          end;
+        end;
+      end;
+    end;
+
   label label_0001;
   begin
     result := false;
-    if GetCurrentToken.Value = ')' then
-    begin
-      dec(have_paren);
-      if have_paren < 1 then
-      begin
-        result := true;
-        exit;
-      end;
-    end;
-    //showmessage('tok:  ' + GetCurrentToken.Value);
-    dummystr := GetCurrentToken.Value;
-    if check_number(dummyStr) then
+    //showmessage('ooooooooooooooooooooo>  ' + GetCurrentToken.Value);
+    dummyStr := GetCurrentToken.Value;
+    if GetCurrentToken.Value = '+' then
     begin
       inc(FCurrentIndex);
       if FCurrentIndex >= FTokens.Count then
       begin
-        SyntaxError('expression error.');
+        SyntaxError('expor error');
         exit;
       end;
-      label_0001:
-      //showMessage('>>>>> ' + GetCurrentToken.Value);
-      case GetCurrentToken.Value[1] of
-        '+': begin
-          inc(FCurrentIndex);
-          dummyStr := GetCurrentToken.Value;
-          if GetCurrentToken.Value = '(' then
-          begin
-            //showmessage('uff paren');
-            inc(have_paren);
-            inc(FCurrentIndex);
-            if FCurrentIndex >= FTokens.Count then
-            begin
-              SyntaxError('unterminated expr - no more data.');
-              exit;
-            end;
-
-            //showMessage('===>>>>> ' + GetCurrentToken.Value + #13#10 + inttostr(have_paren));
-            dummyStr := GetCurrentToken.Value;
-            if check_number(dummyStr) then
-            begin
-              //showmessage('nummser: ' + GetCurrentToken.Value);
-              inc(FCurrentIndex);
-              if FCurrentIndex >= FTokens.Count then
-              begin
-                SyntaxError('unterminated expr - no more data.');
-                exit;
-              end;
-              if GetCurrentToken.Value = ')' then
-              begin
-                //showmessage('kkkklllll uffffter');
-                dec(have_paren);
-                inc(FCurrentIndex);
-                //showmessage('Getter:  ' + GetCurrentToken.Value);
-                goto label_0001;
-              end;
-              inc(FCurrentIndex);
-              if FCurrentIndex >= FTokens.Count then
-              begin
-                raise ENoError.Create('end of data');
-                exit
-              end else
-              begin
-                goto label_0001;
-              end;
-            end;
-
-            if check_chars(GetCurrentToken.Value) then
-            begin
-              //showmessage('checker: ' + GetCurrentToken.Value);
-              inc(FCurrentIndex);
-              if FCurrentIndex >= FTokens.Count then
-              begin
-                SyntaxError('unterminated expr - no more data.');
-                exit;
-              end;
-              goto label_0001;
-            end;
-          end;
-
-          dummyStr := GetCurrentToken.Value;
-          if check_number(dummyStr) then
-          begin
-            //showmessage('number: ' + dummyStr);
-            inc(FCurrentIndex);
-            if FCurrentIndex >= FTokens.Count then
-            begin
-              raise ENoError.Create('end of data.');
-              exit;
-            end else
-            begin
-              goto label_0001;
-            end;
-          end;
-          if check_chars(GetCurrentToken.Value) then
-          begin
-            //showMessage('chars:  ' + GetCurrentToken.Value);
-            goto label_0001;
-          end;
+      result := ParseExpression;
+      exit;
+    end else
+    if GetCurrentToken.Value = '(' then
+    begin
+      //showmessage('kll incc');
+      inc(have_paren);
+      inc(FCurrentIndex);
+      result := ParseExpression;
+      exit;
+    end else
+    if GetCurrentToken.Value = ')' then
+    begin
+      dec(have_paren);
+      if have_paren = 0 then
+      begin
+        inc(FCurrentIndex);
+        if FCurrentIndex >= FTokens.Count then
+        begin
+          raise ENoError.Create('no more data');
+          exit;
+        end else
+        begin
+          //showmessage('closed paren found.)');
+          exit;
         end;
-        '.': begin
+      end else
+      begin
+        inc(FCurrentIndex);
+        if FCurrentIndex >= FTokens.Count then
+        begin
+          SyntaxError('expr error.');
+          exit;
+        end else
+        begin
+          //showmessage('OOOOOOOOOOOOOOOOOOO');
+          result := ParseExpression;
+          exit;
         end;
-        '*': begin
+      end;
+    end else
+    if check_number(dummyStr) then
+    begin
+      //showmessage('a number');
+      inc(FCurrentIndex);
+      if FCurrentIndex >= FTokens.Count then
+      begin
+        if have_paren = 0 then
+        begin
+          raise ENoError.Create('no more data');
+          exit;
+        end else
+        begin
+          SyntaxError('eexpr errpr');
+          exit;
         end;
-        '/': begin
-        end;
-        '%': begin
-        end;
-        '^': begin
-        end;
-        ')': begin
-          //showmessage('oo-=> ' + inttostr(have_paren));
-          if have_paren > 0 then
-          begin
-            dec(have_paren);
-            inc(FCurrentIndex);
-            goto label_0001;
-          end else
-          if have_paren < 0 then
-          begin
-            //showmessage('kkkkll << 0');
-            have_paren := 0;
-            exit;
-          end else
-          begin
-            have_paren := 0;
-            SyntaxError('end parten');
-            exit;
-          end;
-        end
-        else begin
-          if check_chars(GetCurrentToken.Value) then
-          begin
-            //showmessage('chars: ' + GetCurrentToken.Value);
-            inc(FCurrentIndex);
-            goto label_0001;
-          end else
-          begin
-            SyntaxError('inknow chars');
-            exit;
-          end;
-        end;
+      end else
+      begin
+        check_op;
+        result := ParseExpression;
       end;
     end else
     if check_chars(GetCurrentToken.Value) then
     begin
-      goto label_0001;
+      //showmessage('a char');
+      inc(FCurrentIndex);
+      if FCurrentIndex >= FTokens.Count then
+      begin
+        if have_paren = 0 then
+        begin
+          raise ENoError.Create('no more data');
+          exit;
+        end else
+        begin
+          SyntaxError('eexpr errpr');
+          exit;
+        end;
+      end else
+      begin
+        check_op;
+        result := ParseExpression;
+      end;
     end;
   end;
 
@@ -575,7 +583,7 @@ var
   // F = NEW obj
   function ParseNewInstance: boolean;
   begin
-    ShowMessage('New Instance');
+    //ShowMessage('New Instance');
     result := false;
   end;
 begin

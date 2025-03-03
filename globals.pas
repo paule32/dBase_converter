@@ -36,7 +36,7 @@ procedure LoadLanguage(const LangCode: string);
 var
   PoFilePath: string;
 begin
-  PoFilePath := ExtractFilePath(ParamStr(0)) + 'locale/' + LangCode + '.po';
+  PoFilePath := ExtractFilePath(ParamStr(0)) + 'locale/' + LangCode + '.mo';
   if FileExists(PoFilePath) then
     TranslateUnitResourceStrings('default', PoFilePath)
   else
@@ -44,4 +44,5 @@ begin
 end;
 
 end.
+
 
