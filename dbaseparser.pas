@@ -228,87 +228,138 @@ var
   begin
     result := false;
 
-    //showmessage('LOCAL-->  ' + GetCurrentToken.Value);
+    showmessage('LOCAL-->  ' + GetCurrentToken.Value);
 
-    inc(have_local);
-
+    inc(have_param);
     inc(FCurrentIndex);
     if FCurrentIndex >= FTokens.Count then
     begin
-      if have_local < 1 then
+      if have_param < 1 then
       SyntaxError('unterminated ssss keyword: LOCAL');
       raise ENoError.Create('end of data.');
     end;
-
-    if Match(ttDelimiter) and (GetCurrentToken.Value = ',') then
+showmessage('paaa:  ' + GetCurrentToken.Value);
+    if GetCurrentToken.Value = ',' then
     begin
-      have_local := 0;
+      if (FCurrentIndex + 1) >= FTokens.Count then
+      begin
+        SyntaxError('too many commas');
+        exit;
+      end;
+      result := ParseLocal;
+    end else
+    // PARAMETER
+    if GetCurrentToken.Value = 'parameter' then
+    begin
+      showmessage('paraMET found');
       inc(FCurrentIndex);
       if FCurrentIndex >= FTokens.Count then
       begin
-        SyntaxError('local data expected after comma.');
-        exit;
-      end;
-
-      if GetCurrentToken.TokenType = ttKeyWord then
-      begin
-        SyntaxError('keywords after comma not allowed there.');
-        exit;
-      end;
-
-      if check_chars(GetCurrentToken.Value) then
-      begin
-        Result := ParseLocal;
+        SyntaxError('parameter data expected.');
         exit;
       end else
       begin
-        SyntaxError('unknown characcter found after command.');
+        Result := ParseParameter;
         exit;
       end;
     end else
-    if Match(ttKeyWord) then
+    // LOCAL
+    if GetCurrentToken.Value = 'local' then
     begin
-      if have_param > 0 then
+      showmessage('llllloooocalll');
+      inc(FCurrentIndex);
+      if FCurrentIndex >= FTokens.Count then
       begin
-        if GetCurrentToken.TokenType = ttKeyWord then
+        SyntaxError('local data expected.');
+        exit;
+      end else
+      begin
+        Result := ParseLocal;
+        exit;
+      end;
+    end else
+    begin
+      showmessage('kaka: ' + GetCurrentToken.Value);
+      if GetCurrentToken.Value = ',' then
+      begin
+        if (FCurrentIndex + 1) >= FTokens.Count then
         begin
-          // PARAMETER
-          if GetCurrentToken.Value = 'parameter' then
-          begin
-            inc(FCurrentIndex);
-            if FCurrentIndex >= FTokens.Count then
-            begin
-              SyntaxError('parameter data expected.');
-              exit;
-            end else
-            begin
-              Result := ParseParameter;
-              exit;
-            end;
-          end else
-          // LOCAL
-          if GetCurrentToken.Value = 'local' then
-          begin
-            inc(FCurrentIndex);
-            if FCurrentIndex >= FTokens.Count then
-            begin
-              SyntaxError('local data expected.');
-              exit;
-            end else
-            begin
-              Result := ParseLocal;
-              exit;
-            end;
-          end else
-          begin
-            SyntaxError('unknown keyword found.');
-            exit;
-          end;
-        end else
-        begin
-          Result := ParseLocal;
+          SyntaxError('too many commas');
           exit;
         end;
+        result := ParseLocal;
+        exit;
+      end;
+      inc(FCurrentIndex);
+      if FCurrentIndex >= FTokens.Count then
+      begin
+        raise ENoError.Create('no more data');
+        exit;
+      end;
+      showmessage('hhh: ' + GetCurrentToken.Value);
+      if GetCurrentToken.Value = '=' then
+      begin
+        inc(FCurrentIndex);
+        if FCurrentIndex >= FTokens.Count then
+        begin
+          SyntaxError('unterminated assignment.');
+          exit;
+        end;
+        dummyStr := GetCurrentToken.Value;
+        if check_number(dummyStr) then
+        begin
+          result := ParseExpression;
+          exit;
+        end else
+        if check_chars(GetCurrentToken.Value) then
+        begin
+          if GetCurrentToken.Value = 'new' then
+          begin
+            inc(FCurrentIndex);
+            if FCurrentIndex >= FTokens.Count then
+            begin
+              SyntaxError('unterminated assignment.');
+              exit;
+            end else
+            begin
+              if check_chars(GetCurrentToken.Value) then
+              begin
+                showmessage('new ref: ' + GetCurrentToken.Value);
+                inc(FCurrentIndex);
+                if GetCurrentToken.Value = '(' then
+                begin
+                  result := ParseExpression;
+                end else
+                begin
+                  SyntaxError('open paren expected.');
+                  exit;
+                end;
+              end else
+              begin
+                SyntaxError('syntax error assignment');
+                exit;
+              end;
+            end;
+          end else
+          begin
+            Result := ParseNewInstance;
+            exit;
+          end;
+        end;
+      end else
+      if GetCurrentToken.Value = ',' then
+      begin
+        inc(FCurrentIndex);
+        if FCurrentIndex >= FTokens.Count then
+        begin
+          SyntaxError('too many commas');
+          exit;
+        end;
+        result := ParseLocal;
+      end else
+      begin
+        SyntaxError('unknown keywords.');
+        exit;
       end;
     end;
   end;
@@ -318,10 +369,9 @@ var
   begin
     result := false;
 
-    //showmessage('PARAMETER-->  ' + GetCurrentToken.Value);
+    showmessage('PARAMETER-->  ' + GetCurrentToken.Value);
 
     inc(have_param);
-
     inc(FCurrentIndex);
     if FCurrentIndex >= FTokens.Count then
     begin
@@ -329,77 +379,78 @@ var
       SyntaxError('unterminated ssss keyword: PARAMETER');
       raise ENoError.Create('end of data.');
     end;
-
+showmessage('paaa:  ' + GetCurrentToken.Value);
     if GetCurrentToken.Value = ',' then
     begin
-      have_param := 0;
+      if (FCurrentIndex + 1) >= FTokens.Count then
+      begin
+        SyntaxError('too many commas');
+        exit;
+      end;
+      result := ParseParameter;
+    end else
+    // PARAMETER
+    if GetCurrentToken.Value = 'parameter' then
+    begin
+      showmessage('paraMET found');
       inc(FCurrentIndex);
       if FCurrentIndex >= FTokens.Count then
       begin
-        SyntaxError('parameter data expected after comma.');
-        exit;
-      end;
-
-      if GetCurrentToken.TokenType = ttKeyWord then
-      begin
-        SyntaxError('keywords after comma not allowed there.');
-        exit;
-      end;
-
-      if check_chars(GetCurrentToken.Value) then
-      begin
-        showmessage('oo>> ' + GetCurrentToken.Value);
-        Result := ParseParameter;
+        SyntaxError('parameter data expected.');
         exit;
       end else
       begin
-        SyntaxError('unknown characcter found after commad.');
+        Result := ParseParameter;
         exit;
       end;
     end else
-    if Match(ttKeyWord) then
+    // LOCAL
+    if GetCurrentToken.Value = 'local' then
     begin
-      if have_param > 0 then
+      showmessage('llllloooocalll');
+      inc(FCurrentIndex);
+      if FCurrentIndex >= FTokens.Count then
       begin
-        if GetCurrentToken.TokenType = ttKeyWord then
+        SyntaxError('local data expected.');
+        exit;
+      end else
+      begin
+        Result := ParseLocal;
+        exit;
+      end;
+    end else
+    begin
+      showmessage('kaka: ' + GetCurrentToken.Value);
+      if GetCurrentToken.Value = ',' then
+      begin
+        if (FCurrentIndex + 1) >= FTokens.Count then
         begin
-          // PARAMETER
-          if GetCurrentToken.Value = 'parameter' then
-          begin
-            inc(FCurrentIndex);
-            if FCurrentIndex >= FTokens.Count then
-            begin
-              SyntaxError('parameter data expected.');
-              exit;
-            end else
-            begin
-              Result := ParseParameter;
-              exit;
-            end;
-          end else
-          // LOCAL
-          if GetCurrentToken.Value = 'local' then
-          begin
-            inc(FCurrentIndex);
-            if FCurrentIndex >= FTokens.Count then
-            begin
-              SyntaxError('local data expected.');
-              exit;
-            end else
-            begin
-              Result := ParseLocal;
-              exit;
-            end;
-          end else
-          begin
-            SyntaxError('unknown keywords.');
-            exit;
-          end;
-        end else
-        begin
-          Result := ParseParameter;
+          SyntaxError('too many commas');
           exit;
         end;
+        result := ParseParameter;
+        exit;
+      end;
+      inc(FCurrentIndex);
+      if FCurrentIndex >= FTokens.Count then
+      begin
+        raise ENoError.Create('no more data');
+        exit;
+      end;
+      showmessage('hhh: ' + GetCurrentToken.Value);
+      if GetCurrentToken.Value = ',' then
+      begin
+        inc(FCurrentIndex);
+        if FCurrentIndex >= FTokens.Count then
+        begin
+          SyntaxError('too many commas');
+          exit;
+        end;
+        result := ParseParameter;
+      end else
+      begin
+        SyntaxError('unknown keywords.');
+        exit;
       end;
     end;
   end;
