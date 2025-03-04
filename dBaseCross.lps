@@ -8,8 +8,8 @@
       <Unit>
         <Filename Value="dBaseCross.lpr"/>
         <IsPartOfProject Value="True"/>
-        <CursorPos X="11"/>
-        <UsageCount Value="200"/>
+        <CursorPos Y="17"/>
+        <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -20,9 +20,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="dBaseEditor"/>
         <EditorIndex Value="1"/>
-        <TopLine Value="102"/>
-        <CursorPos X="3" Y="119"/>
-        <UsageCount Value="200"/>
+        <TopLine Value="225"/>
+        <CursorPos X="53" Y="241"/>
+        <UsageCount Value="201"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -33,7 +33,7 @@
         <EditorIndex Value="4"/>
         <TopLine Value="17"/>
         <CursorPos Y="51"/>
-        <UsageCount Value="200"/>
+        <UsageCount Value="201"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -43,149 +43,148 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="125"/>
         <CursorPos X="36" Y="127"/>
-        <UsageCount Value="200"/>
+        <UsageCount Value="201"/>
       </Unit>
       <Unit>
         <Filename Value="globals.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="47"/>
-        <CursorPos X="21" Y="72"/>
-        <UsageCount Value="195"/>
+        <TopLine Value="86"/>
+        <CursorPos X="11" Y="22"/>
+        <UsageCount Value="234"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="dbaseparser.pas"/>
         <IsPartOfProject Value="True"/>
         <UnitName Value="dBaseParser"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="462"/>
-        <CursorPos X="20" Y="489"/>
-        <UsageCount Value="173"/>
+        <TopLine Value="335"/>
+        <CursorPos X="25" Y="353"/>
+        <UsageCount Value="212"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="23" Column="3" TopLine="14"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="25" Column="34" TopLine="5"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="42" Column="7" TopLine="27"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="57" Column="11" TopLine="26"/>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="216" Column="29" TopLine="188"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="66" Column="22" TopLine="47"/>
+        <Caret Line="215" Column="29" TopLine="187"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="9" Column="12"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="39" Column="60" TopLine="26"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="25" Column="39" TopLine="17"/>
+        <Caret Line="214" Column="29" TopLine="186"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="116" Column="25" TopLine="98"/>
+        <Caret Line="213" Column="29" TopLine="185"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="121" TopLine="98"/>
+        <Caret Line="214" Column="29" TopLine="186"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="100" Column="10" TopLine="90"/>
+        <Caret Line="213" Column="29" TopLine="185"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="113" Column="6" TopLine="95"/>
+        <Caret Line="216" Column="29" TopLine="188"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="115" Column="37" TopLine="97"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="24" Column="20" TopLine="17"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="50" Column="8" TopLine="27"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="46" Column="6" TopLine="29"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="73" Column="9" TopLine="53"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="82" Column="6" TopLine="53"/>
+        <Caret Line="217" Column="29" TopLine="189"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="115" Column="42" TopLine="98"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="41" Column="37" TopLine="17"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="40" Column="18" TopLine="23"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="42" Column="35" TopLine="24"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="40" Column="16" TopLine="24"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="41" Column="34" TopLine="24"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="42" Column="43" TopLine="24"/>
-      </Position>
-      <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="37" TopLine="24"/>
+        <Caret Line="220" Column="29" TopLine="192"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="114" TopLine="97"/>
+        <Caret Line="240" TopLine="206"/>
+      </Position>
+      <Position>
+        <Filename Value="globals.pas"/>
+        <Caret Line="54" Column="17" TopLine="25"/>
+      </Position>
+      <Position>
+        <Filename Value="globals.pas"/>
+        <Caret Line="57" Column="23" TopLine="45"/>
+      </Position>
+      <Position>
+        <Filename Value="globals.pas"/>
+        <Caret Line="56" Column="21" TopLine="37"/>
+      </Position>
+      <Position>
+        <Filename Value="globals.pas"/>
+        <Caret Line="64" Column="19" TopLine="38"/>
+      </Position>
+      <Position>
+        <Filename Value="globals.pas"/>
+        <Caret Line="66" Column="14" TopLine="50"/>
+      </Position>
+      <Position>
+        <Filename Value="globals.pas"/>
+        <Caret Line="53" Column="9" TopLine="34"/>
       </Position>
       <Position>
         <Filename Value="dbaseeditor.pas"/>
-        <Caret Line="119" Column="3" TopLine="102"/>
+        <Caret Line="240" TopLine="206"/>
       </Position>
       <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="61" Column="16" TopLine="38"/>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="236" Column="3" TopLine="206"/>
       </Position>
       <Position>
-        <Filename Value="globals.pas"/>
-        <Caret Line="70" Column="3" TopLine="41"/>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="83" Column="12" TopLine="68"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="245" Column="46" TopLine="224"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="222" Column="7" TopLine="222"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="256" TopLine="222"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="237" Column="43" TopLine="220"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseeditor.pas"/>
+        <Caret Line="229" Column="13" TopLine="222"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="679" Column="68" TopLine="650"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="504" Column="68" TopLine="480"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="503" Column="57" TopLine="488"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="220" Column="26" TopLine="192"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="285" Column="39" TopLine="258"/>
       </Position>
     </JumpHistory>
     <RunParams>

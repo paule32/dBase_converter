@@ -30,6 +30,10 @@ type
 
 function tr(AString: String): String;
 implementation
+uses
+  {$IFDEF WINDOWS}
+  Windows;
+  {$ENDIF}
 
 var
   motr: TMoTranslate;
@@ -42,9 +46,43 @@ begin
 end;
 
 constructor TMoTranslate.Create(ALang: String; ACheck: Boolean);
+{$IFDEF WINDOWS}
+const LOCALE_NAME_MAX_LENGTH = 2;
+var
+  LangID: LCID;
+  Buffer: array[0..LOCALE_NAME_MAX_LENGTH] of Char;
+{$ENDIF}
 var
   filePath: String;
 begin
+  {$IFDEF WINDOWS}
+  if ACheck then
+  begin
+    // Windows: GetThreadLocale gibt die Locale ID zurück
+    case GetThreadLocale of
+      $0001: FLangID := 'ar';
+      $0002: FLangID := 'bg';
+      $0003: FLangID := 'ca';
+      $0004: FLangID := 'zh';
+      $0005: FLangID := 'cs';
+      $0006: FLangID := 'da';
+      $0007: FLangID := 'de';
+      $0008: FLangID := 'el';
+      $0009: FLangID := 'en';
+      $000A: FLangID := 'es';
+      else begin
+        FLangID := 'en';
+      end;
+    end;
+    if GetLocaleInfo(LangID, LOCALE_SISO639LANGNAME, Buffer, SizeOf(Buffer)) > 0 then
+    begin
+      FLangID := Buffer;
+    end;
+  end else
+  begin
+    FLangID := ALang;
+  end;
+  {$ELSE}
   if ACheck then
   begin
     FLangID := GetEnvironmentVariable('LANG');
@@ -55,11 +93,11 @@ begin
   begin
     FLangID := ALang;
   end;
+  {$ENDIF}
 
   filePath := ExtractFilePath(ParamStr(0)) + 'locale/' + FLangID + '.mo';
   if FileExists(filePath) then
   begin
-    showmessage(filePath);
     inherited Create(filePath);
   end else
   begin

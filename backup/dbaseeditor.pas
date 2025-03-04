@@ -40,6 +40,7 @@ type
     Splitter3: TSplitter;
     StatusBar1: TStatusBar;
     SynAnySyn1: TSynAnySyn;
+    SynEdit1: TSynEdit;
     SynEditDB: TSynEdit;
     SynEditPy: TSynEdit;
     SynEditPas: TSynEdit;
@@ -50,6 +51,7 @@ type
     TabSheet3: TTabSheet;
     TabSheet4: TTabSheet;
     TabSheet5: TTabSheet;
+    TabSheet6: TTabSheet;
     TreeView1: TTreeView;
     TreeView2: TTreeView;
     procedure Button1Click(Sender: TObject);
@@ -63,6 +65,10 @@ type
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SynEditDBChange(Sender: TObject);
+    procedure SynEditDBKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState
+      );
+    procedure TreeView1CustomDrawItem(Sender: TCustomTreeView; Node: TTreeNode;
+      State: TCustomDrawState; var DefaultDraw: Boolean);
   private
   public
 
@@ -76,7 +82,7 @@ implementation
 {$R *.lfm}
 
 uses
-  commentpreprocessor, tokenprocessor,
+  RegExpr, commentpreprocessor, tokenprocessor,
   dBaseParser;
 
 resourcestring
@@ -111,12 +117,11 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
-  ShowMessage(tr('done.'));
+  TreeView1.Items.Clear;
 end;
 
 procedure TForm1.FormDestroy(Sender: TObject);
 begin
-  motr.Free;
 end;
 
 procedure TForm1.FormKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -215,14 +220,103 @@ begin
       end;
     end;
   finally
-    ShowMessage('done.');
+    ShowMessage(tr('done.'));
     tok.Free;
   end;
 end;
 
 procedure TForm1.SynEditDBChange(Sender: TObject);
+  procedure ParseClassesToTreeView(TreeView: TTreeView; const Source: string);
+  var
+    Regex: TRegExpr;
+    Lines: TStringList;
+    i: Integer;
+    CurrentLine, ClassName, BaseClass: string;
+  begin
+    TreeView.Items.Clear; // Vor jeder Aktualisierung TreeView leeren
+
+    Regex := TRegExpr.Create;
+    Lines := TStringList.Create;
+    try
+      Regex.Expression := 'class\s+(\w+)(?:\s*\r?\n\s*)*of\s+(\w+)'; // Multiline-Support
+      Lines.Text := Source;
+
+      for i := 0 to Lines.Count - 1 do
+      begin
+        CurrentLine := Trim(Lines[i]);
+
+        // Kommentare ignorieren
+        if (Pos('//', CurrentLine) = 1) or (Pos('**', CurrentLine) = 1) or (Pos('&&', CurrentLine) = 1) then
+          Continue;
+
+        // Falls "class" gefunden wird, nachfolgende Zeilen einbeziehen
+        if Regex.Exec(CurrentLine) then
+        begin
+          repeat
+            ClassName := Regex.Match[1]; // Klassennamen erfassen
+            BaseClass := Regex.Match[2]; // Basisklasse erfassen
+            TreeView.Items.Add(nil, ClassName + ' (of ' + BaseClass + ')');
+          until not Regex.ExecNext;
+        end;
+      end;
+    finally
+      Regex.Free;
+      Lines.Free;
+    end;
+  end;
+begin
+  TreeView1.Items.Clear;
+  ParseClassesToTreeView(TreeView1, SynEditDB.Text);
+end;
+
+procedure
+TForm1.SynEditDBKeyUp(
+  Sender : TObject;
+  var Key: Word;
+  Shift  : TShiftState);
 begin
 
+end;
+
+procedure TForm1.TreeView1CustomDrawItem(
+  Sender: TCustomTreeView;
+  Node: TTreeNode;
+  State: TCustomDrawState;
+  var DefaultDraw: Boolean);
+var
+  BaseText, HighlightText: string;
+  TextWidth, X, Y: Integer;
+begin
+  // Sicherstellen, dass der Knoten Text enthält
+  if Node.Text = '' then Exit;
+
+  // Prüfen, ob der Text "(of identifier)" enthält
+  if Pos('(of ', Node.Text) > 0 then
+  begin
+    // Den Text in zwei Teile aufteilen
+    BaseText := Copy(Node.Text, 1, Pos('(of', Node.Text) - 1); // Vor "of"
+    HighlightText := Copy(Node.Text, Pos('(of', Node.Text), Length(Node.Text)); // "of identifier)"
+
+    // Position bestimmen
+    X := Node.DisplayRect(True).Left;
+    Y := Node.DisplayRect(True).Top;
+
+    // Hintergrund löschen, um Artefakte zu vermeiden
+    Sender.Canvas.FillRect(Node.DisplayRect(True));
+
+    // Den normalen Text in Schwarz zeichnen
+    Sender.Canvas.Font.Color := clBlack;
+    Sender.Canvas.TextOut(X, Y, BaseText);
+
+    // Breite des normalen Textes messen
+    TextWidth := Sender.Canvas.TextWidth(BaseText);
+
+    // Den Teil nach "of" in Blau zeichnen
+    Sender.Canvas.Font.Color := clBlue;
+    Sender.Canvas.TextOut(X + TextWidth, Y, HighlightText);
+
+    DefaultDraw := False; // Verhindert doppeltes Zeichnen
+  end;
 end;
 
 end.

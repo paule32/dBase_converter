@@ -7,9 +7,6 @@ uses
   SysUtils, Classes, TokenProcessor, ComCtrls,
   Generics.Collections;
 
-resourcestring
-  rsDone = 'done.';
-
 type
   TdBaseParser = class
   private
@@ -333,7 +330,7 @@ var
       raise ENoError.Create('end of data.');
     end;
 
-    if Match(ttDelimiter) and (GetCurrentToken.Value = ',') then
+    if GetCurrentToken.Value = ',' then
     begin
       have_param := 0;
       inc(FCurrentIndex);
@@ -351,6 +348,7 @@ var
 
       if check_chars(GetCurrentToken.Value) then
       begin
+        showmessage('oo>> ' + GetCurrentToken.Value);
         Result := ParseParameter;
         exit;
       end else
@@ -504,8 +502,18 @@ var
           exit;
         end else
         begin
-          //showmessage('closed paren found.)');
-          exit;
+          if GetCurrentToken.Value = 'parameter' then
+          begin
+            result := ParseParameter;
+          end else
+          if GetCurrentToken.Value = 'local' then
+          begin
+            result := ParseLocal;
+          end else
+          begin
+            SyntaxError('unknown keyword found.');
+            exit;
+          end;
         end;
       end else
       begin
@@ -545,7 +553,7 @@ var
     end else
     if check_chars(GetCurrentToken.Value) then
     begin
-      //showmessage('a char');
+      showmessage('a char: ' + GetCurrentToken.Value);
       inc(FCurrentIndex);
       if FCurrentIndex >= FTokens.Count then
       begin
@@ -658,18 +666,48 @@ begin
           begin
             SyntaxError('unterminated assignment.');
             exit;
+          end;
+          dummyStr := GetCurrentToken.Value;
+          if check_number(dummyStr) then
+          begin
+            result := ParseExpression;
+            exit;
           end else
+          if check_chars(GetCurrentToken.Value) then
           begin
             if GetCurrentToken.Value = 'new' then
             begin
-              Result := ParseNewInstance;
-              exit;
+              inc(FCurrentIndex);
+              if FCurrentIndex >= FTokens.Count then
+              begin
+                SyntaxError('unterminated assignment.');
+                exit;
+              end else
+              begin
+                if check_chars(GetCurrentToken.Value) then
+                begin
+                  showmessage('new ref: ' + GetCurrentToken.Value);
+                  inc(FCurrentIndex);
+                  if GetCurrentToken.Value = '(' then
+                  begin
+                    result := ParseExpression;
+                  end else
+                  begin
+                    SyntaxError('open paren expected.');
+                    exit;
+                  end;
+                end else
+                begin
+                  SyntaxError('syntax error assignment');
+                  exit;
+                end;
+              end;
             end else
             begin
-              Result := ParseAssignment;
+              Result := ParseNewInstance;
               exit;
             end;
-          end;
+           end;
         end else
 
         // FUNC()
