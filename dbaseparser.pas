@@ -8,12 +8,28 @@ uses
   Generics.Collections;
 
 type
+  TSymbolType = (stUnknown, stParameter, stLocal, stNewObject);
+type
+  TSymbolClass = class
+  private
+    FSymbolName: String;
+    FSymbolType: TSymbolType;
+    FArguments: TDictionary<String, TSymbolClass>;
+  public
+    constructor Create(AString: String); overload;
+    constructor Create(AString: String; AType: TSymbolType);
+  end;
+
+type
   TdBaseParser = class
   private
     FTokens: TStringList;
     FCurrentIndex: Integer;
     FTokenDictionary: TDictionary<string, TTokenType>;
     FTokenContext: TTokenType;
+    FLastToken: String;
+    FSymbolDictionary: TDictionary<string, TSymbolClass>;
+
     function GetCurrentToken: TToken;
 
     function Match(ExpectedType: TTokenType): Boolean;
@@ -40,8 +56,26 @@ implementation
 uses
   Dialogs, CommentPreprocessor;
 
+constructor TSymbolClass.Create(AString: String);
+begin
+  inherited Destroy;
+
+  FSymbolName := AString;
+  FSymbolType := stUnknown;
+end;
+
+constructor TSymbolClass.Create(AString: String; AType: TSymbolType);
+begin
+  inherited Destroy;
+
+  FSymbolName := AString;
+  FSymbolType := AType;
+end;
+
 constructor TdBaseParser.Create(src: String);
 begin
+  inherited Create;
+
   FTokens := TStringList.Create;
   FTokens.Text  := TokenLexer(CommentLexer(src));
   FCurrentIndex := 0;
@@ -63,6 +97,8 @@ begin
   FTokenDictionary.Add(':', ttDelimiter);
   FTokenDictionary.Add(';', ttDelimiter);
   FTokenDictionary.Add(',', ttDelimiter);
+
+  FSymbolDictionary := TDictionary<string, TSymbolClass>.Create;
 end;
 
 destructor TdBaseParser.Destroy;
@@ -91,7 +127,8 @@ function TdBaseParser.check_chars(const TokenStr: string): Boolean;
 begin
   result := true;
   if not (TokenStr[1] in ['A'..'Z', 'a'..'z', '_']) then
-  SyntaxError('unknown character found: ' + TokenStr[1]);
+  result := false;
+  //SyntaxError('unknown character found: ' + TokenStr[1]);
 end;
 
 function TdBaseParser.check_number(var TokenStr: string): Boolean;
@@ -223,144 +260,25 @@ var
   function ParseNewInstance: Boolean; forward;
   function ParseExpression: Boolean; forward;
 
-  // LOCAL
-  function ParseLocal: boolean;
+  procedure check_eof(AString: String=''); forward;
+  procedure check_key; forward;
+
+  procedure check_eof(AString: String='');
   begin
-    result := false;
-
-    showmessage('LOCAL-->  ' + GetCurrentToken.Value);
-
-    inc(have_param);
     inc(FCurrentIndex);
     if FCurrentIndex >= FTokens.Count then
     begin
-      if have_param < 1 then
-      SyntaxError('unterminated ssss keyword: LOCAL');
-      raise ENoError.Create('end of data.');
+      if Length(AString) > 0 then
+      SyntaxError(AString) else
+      SyntaxError('syntax error');
     end;
-showmessage('paaa:  ' + GetCurrentToken.Value);
-    if GetCurrentToken.Value = ',' then
+  end;
+  procedure check_key;
+  begin
+    if check_keyword then
     begin
-      if (FCurrentIndex + 1) >= FTokens.Count then
-      begin
-        SyntaxError('too many commas');
-        exit;
-      end;
-      result := ParseLocal;
-    end else
-    // PARAMETER
-    if GetCurrentToken.Value = 'parameter' then
-    begin
-      showmessage('paraMET found');
-      inc(FCurrentIndex);
-      if FCurrentIndex >= FTokens.Count then
-      begin
-        SyntaxError('parameter data expected.');
-        exit;
-      end else
-      begin
-        Result := ParseParameter;
-        exit;
-      end;
-    end else
-    // LOCAL
-    if GetCurrentToken.Value = 'local' then
-    begin
-      showmessage('llllloooocalll');
-      inc(FCurrentIndex);
-      if FCurrentIndex >= FTokens.Count then
-      begin
-        SyntaxError('local data expected.');
-        exit;
-      end else
-      begin
-        Result := ParseLocal;
-        exit;
-      end;
-    end else
-    begin
-      showmessage('kaka: ' + GetCurrentToken.Value);
-      if GetCurrentToken.Value = ',' then
-      begin
-        if (FCurrentIndex + 1) >= FTokens.Count then
-        begin
-          SyntaxError('too many commas');
-          exit;
-        end;
-        result := ParseLocal;
-        exit;
-      end;
-      inc(FCurrentIndex);
-      if FCurrentIndex >= FTokens.Count then
-      begin
-        raise ENoError.Create('no more data');
-        exit;
-      end;
-      showmessage('hhh: ' + GetCurrentToken.Value);
-      if GetCurrentToken.Value = '=' then
-      begin
-        inc(FCurrentIndex);
-        if FCurrentIndex >= FTokens.Count then
-        begin
-          SyntaxError('unterminated assignment.');
-          exit;
-        end;
-        dummyStr := GetCurrentToken.Value;
-        if check_number(dummyStr) then
-        begin
-          result := ParseExpression;
-          exit;
-        end else
-        if check_chars(GetCurrentToken.Value) then
-        begin
-          if GetCurrentToken.Value = 'new' then
-          begin
-            inc(FCurrentIndex);
-            if FCurrentIndex >= FTokens.Count then
-            begin
-              SyntaxError('unterminated assignment.');
-              exit;
-            end else
-            begin
-              if check_chars(GetCurrentToken.Value) then
-              begin
-                showmessage('new ref: ' + GetCurrentToken.Value);
-                inc(FCurrentIndex);
-                if GetCurrentToken.Value = '(' then
-                begin
-                  result := ParseExpression;
-                end else
-                begin
-                  SyntaxError('open paren expected.');
-                  exit;
-                end;
-              end else
-              begin
-                SyntaxError('syntax error assignment');
-                exit;
-              end;
-            end;
-          end else
-          begin
-            Result := ParseNewInstance;
-            exit;
-          end;
-        end;
-      end else
-      if GetCurrentToken.Value = ',' then
-      begin
-        inc(FCurrentIndex);
-        if FCurrentIndex >= FTokens.Count then
-        begin
-          SyntaxError('too many commas');
-          exit;
-        end;
-        result := ParseLocal;
-      end else
-      begin
-        SyntaxError('unknown keywords.');
-        exit;
-      end;
+      SyntaxError('keyword: ' + GetCurrentToken.Value + ' not expected.');
+      exit;
     end;
   end;
 
@@ -368,88 +286,60 @@ showmessage('paaa:  ' + GetCurrentToken.Value);
   function ParseParameter: boolean;
   begin
     result := false;
-
-    showmessage('PARAMETER-->  ' + GetCurrentToken.Value);
-
-    inc(have_param);
     inc(FCurrentIndex);
     if FCurrentIndex >= FTokens.Count then
     begin
-      if have_param < 1 then
-      SyntaxError('unterminated ssss keyword: PARAMETER');
-      raise ENoError.Create('end of data.');
-    end;
-showmessage('paaa:  ' + GetCurrentToken.Value);
+      exit;
+    end else
     if GetCurrentToken.Value = ',' then
     begin
-      if (FCurrentIndex + 1) >= FTokens.Count then
-      begin
-        SyntaxError('too many commas');
-        exit;
-      end;
-      result := ParseParameter;
-    end else
-    // PARAMETER
-    if GetCurrentToken.Value = 'parameter' then
-    begin
-      showmessage('paraMET found');
-      inc(FCurrentIndex);
-      if FCurrentIndex >= FTokens.Count then
-      begin
-        SyntaxError('parameter data expected.');
-        exit;
-      end else
-      begin
-        Result := ParseParameter;
-        exit;
-      end;
-    end else
-    // LOCAL
-    if GetCurrentToken.Value = 'local' then
-    begin
-      showmessage('llllloooocalll');
-      inc(FCurrentIndex);
-      if FCurrentIndex >= FTokens.Count then
-      begin
-        SyntaxError('local data expected.');
-        exit;
-      end else
-      begin
-        Result := ParseLocal;
-        exit;
-      end;
-    end else
-    begin
-      showmessage('kaka: ' + GetCurrentToken.Value);
+      check_eof('too many commas');
       if GetCurrentToken.Value = ',' then
       begin
-        if (FCurrentIndex + 1) >= FTokens.Count then
-        begin
-          SyntaxError('too many commas');
-          exit;
-        end;
-        result := ParseParameter;
+        SyntaxError('syntax error');
         exit;
       end;
-      inc(FCurrentIndex);
-      if FCurrentIndex >= FTokens.Count then
+      if check_keyword then
       begin
-        raise ENoError.Create('no more data');
+        SyntaxError('keyword: ' + GetCurrentToken.Value + ' not expected.');
         exit;
       end;
-      showmessage('hhh: ' + GetCurrentToken.Value);
-      if GetCurrentToken.Value = ',' then
+      if check_chars(GetCurrentToken.Value) then
       begin
-        inc(FCurrentIndex);
-        if FCurrentIndex >= FTokens.Count then
-        begin
-          SyntaxError('too many commas');
-          exit;
-        end;
         result := ParseParameter;
       end else
       begin
-        SyntaxError('unknown keywords.');
+        SyntaxError('comma without parameter.');
+        exit;
+      end;
+    end;
+  end;
+
+  // LOCAL
+  function ParseLocal: boolean;
+  begin
+    result := false;
+    inc(FCurrentIndex);
+    if FCurrentIndex >= FTokens.Count then
+    begin
+      exit;
+    end;
+    showmessage('-----------> ' + GetCurrentToken.Value);
+    if GetCurrentToken.Value = ',' then
+    begin
+      check_eof('too many commas');
+      check_key;
+      if GetCurrentToken.Value = ',' then
+      begin
+        SyntaxError('syntax error');
+        exit;
+      end;
+      if check_chars(GetCurrentToken.Value) then
+      begin
+        result := ParseParameter;
+      end else
+      begin
+        SyntaxError('comma without parameter.');
         exit;
       end;
     end;
@@ -496,14 +386,17 @@ showmessage('paaa:  ' + GetCurrentToken.Value);
           dec(have_paren);
           if have_paren = 0 then
           begin
-            //showmessage('clos paren');
+            showmessage('clos paren');
             inc(FCurrentIndex);
             if FCurrentIndex >= FTokens.Count then
             begin
               raise ENoError.Create('no more data');
               exit;
+            end else
+            begin
+              showmessage('--> ' + GetCurrentToken.Value);
+              exit;
             end;
-            exit;
           end else
           begin
             inc(FCurrentIndex);
@@ -522,121 +415,184 @@ showmessage('paaa:  ' + GetCurrentToken.Value);
     result := false;
     //showmessage('ooooooooooooooooooooo>  ' + GetCurrentToken.Value);
     dummyStr := GetCurrentToken.Value;
-    if GetCurrentToken.Value = '+' then
-    begin
-      inc(FCurrentIndex);
-      if FCurrentIndex >= FTokens.Count then
+    case GetCurrentToken.Value[1] of
+      '+', '-',
+      '*', '/',
+      '%', '^':
       begin
-        SyntaxError('expor error');
-        exit;
-      end;
-      result := ParseExpression;
-      exit;
-    end else
-    if GetCurrentToken.Value = '(' then
-    begin
-      //showmessage('kll incc');
-      inc(have_paren);
-      inc(FCurrentIndex);
-      result := ParseExpression;
-      exit;
-    end else
-    if GetCurrentToken.Value = ')' then
-    begin
-      dec(have_paren);
-      if have_paren = 0 then
-      begin
-        inc(FCurrentIndex);
-        if FCurrentIndex >= FTokens.Count then
+        check_eof;
+        dummyStr := GetCurrentToken.Value;
+        if GetCurrentToken.Value = '+' then
         begin
-          raise ENoError.Create('no more data');
-          exit;
-        end else
-        begin
-          if GetCurrentToken.Value = 'parameter' then
-          begin
-            result := ParseParameter;
-          end else
-          if GetCurrentToken.Value = 'local' then
-          begin
-            result := ParseLocal;
-          end else
-          begin
-            SyntaxError('unknown keyword found.');
-            exit;
-          end;
-        end;
-      end else
-      begin
-        inc(FCurrentIndex);
-        if FCurrentIndex >= FTokens.Count then
-        begin
-          SyntaxError('expr error.');
-          exit;
-        end else
-        begin
-          //showmessage('OOOOOOOOOOOOOOOOOOO');
           result := ParseExpression;
           exit;
         end;
       end;
-    end else
-    if check_number(dummyStr) then
-    begin
-      //showmessage('a number');
-      inc(FCurrentIndex);
-      if FCurrentIndex >= FTokens.Count then
+      '(':
       begin
-        if have_paren = 0 then
-        begin
-          raise ENoError.Create('no more data');
-          exit;
-        end else
-        begin
-          SyntaxError('eexpr errpr');
-          exit;
-        end;
-      end else
-      begin
-        check_op;
+        //showmessage('kll incc');
+        inc(have_paren);
+        check_eof;
         result := ParseExpression;
+        exit;
       end;
-    end else
-    if check_chars(GetCurrentToken.Value) then
-    begin
-      showmessage('a char: ' + GetCurrentToken.Value);
-      inc(FCurrentIndex);
-      if FCurrentIndex >= FTokens.Count then
+      ')':
       begin
+        dec(have_paren);
         if have_paren = 0 then
         begin
-          raise ENoError.Create('no more data');
-          exit;
-        end else
+          inc(FCurrentIndex);
+          if FCurrentIndex >= FTokens.Count then
+          begin
+            raise ENoError.Create('no more data');
+            exit;
+          end else
+          begin
+            if GetCurrentToken.Value = 'parameter' then begin result := ParseParameter;  end else
+            if GetCurrentToken.Value = 'local'     then begin result := ParseLocal;      end else
+            begin
+              showmessage('ooo:  ' + GetCurrentToken.Value);
+              check_eof();
+              if GetCurrentToken.Value = '=' then
+              begin
+                showmessage('-->:  ' + GetCurrentToken.Value);
+                result := ParseAssignment;
+                exit;
+              end;
+            end;
+          end;
+        end;
+      end;
+      '0'..'9':
+      begin
+        if check_number(dummyStr) then
         begin
-          SyntaxError('eexpr errpr');
+          inc(FCurrentIndex);
+          if FCurrentIndex >= FTokens.Count then
+          begin
+            if have_paren = 0 then
+            begin
+              raise ENoError.Create('no more data');
+              exit;
+            end else
+            begin
+              SyntaxError('eexpr errpr');
+              exit;
+            end;
+          end;
+          check_op;
+          result := ParseExpression;
           exit;
+        end;
+      end;
+      'A'..'Z', 'a'..'z', '_':
+      begin
+        if check_chars(GetCurrentToken.Value) then
+        begin
+          //showmessage('a char: ' + GetCurrentToken.Value);
+          inc(FCurrentIndex);
+          if FCurrentIndex >= FTokens.Count then
+          begin
+            if have_paren = 0 then
+            begin
+              raise ENoError.Create('no more data');
+              exit;
+            end else
+            begin
+              SyntaxError('eexpr errpr');
+              exit;
+            end;
+          end else
+          begin
+            check_op;
+            result := ParseExpression;
+          end;
         end;
       end else
       begin
-        check_op;
-        result := ParseExpression;
+        SyntaxError('unknown character found.');
+        exit;
       end;
     end;
   end;
 
   // F =
   function ParseAssignment: boolean;
+  label label_0003;
+  var
+    sc: TSymbolClass;
   begin
     result := false;
-    Match(ttIdentifier);
-    if not Match(ttOperator) or (GetCurrentToken.Value <> '=') then
-      SyntaxError('"=" erwartet');
-    Match(ttOperator);
-    if GetCurrentToken.TokenType = ttKeyword then
-      ParseNewInstance
-    else
-      Match(ttIdentifier);
+    inc(FCurrentIndex);
+    if FCurrentIndex >= FTokens.Count then
+    begin
+      SyntaxError('unterminated assignment.');
+      exit;
+    end;
+    dummyStr := GetCurrentToken.Value;
+    if check_number(dummyStr) then
+    begin
+      result := ParseExpression;
+      showmessage('==> ' + GetCurrentToken.Value);
+      exit;
+    end else
+    if check_chars(GetCurrentToken.Value) then
+    begin
+      label_0003:
+      sc := TSymbolClass.Create(FLastToken, stNewObject);
+      if GetCurrentToken.Value = 'new' then
+      begin
+        inc(FCurrentIndex);
+        if FCurrentIndex >= FTokens.Count then
+        begin
+          SyntaxError('unterminated assignment.');
+          exit;
+        end else
+        begin
+          if check_chars(GetCurrentToken.Value) then
+          begin
+            showmessage('new ref: ' + GetCurrentToken.Value);
+            FSymbolDictionary.Add(GetCurrentToken.Value, sc);
+
+            inc(FCurrentIndex);
+            if GetCurrentToken.Value = '(' then
+            begin
+              result := ParseExpression;
+              showmessage('--> ' + GetCurrentToken.Value);
+              inc(FCurrentIndex);
+              if FCurrentIndex >= FTokens.Count then
+              begin
+                raise ENoError.Create('end of data');
+                exit
+              end else
+              begin
+                if check_chars(GetCurrentToken.Value) then
+                begin
+                  showmessage('-----> ' + GetCurrentToken.Value);
+                  inc(FCurrentIndex);
+                  if GetCurrentToken.Value = '=' then
+                  begin
+                    goto label_0003;
+                  end;
+                end;
+              end;
+            end else
+            begin
+              SyntaxError('open paren expected.');
+              exit;
+            end;
+          end else
+          begin
+            SyntaxError('syntax error assignment');
+            exit;
+          end;
+        end;
+      end else
+      begin
+        Result := ParseNewInstance;
+        exit;
+      end;
+    end;
   end;
 
   // F = NEW obj
@@ -660,17 +616,9 @@ begin
         // PARAMETER
         if GetCurrentToken.Value = 'parameter' then
         begin
-          have_param := 0;
-          inc(FCurrentIndex);
-          if FCurrentIndex > FTokens.Count then
-          begin
-            if have_param < 1 then
-            begin
-              SyntaxError('unterminated keyword: PARAMETER');
-              exit;
-            end;
-          end;
-          ParseParameter;
+          inc(have_param);
+          check_eof;
+          result := ParseParameter;
         end else
         // LOCAL
         if GetCurrentToken.Value = 'local' then
@@ -685,6 +633,8 @@ begin
               exit;
             end;
           end;
+          showmessage('ju:  ' + GetCurrentToken.Value);
+          FLastToken := GetCurrentToken.Value;
           ParseLocal;
         end else
         begin
@@ -712,53 +662,7 @@ begin
         inc(FCurrentIndex);
         if GetCurrentToken.Value = '=' then
         begin
-          inc(FCurrentIndex);
-          if FCurrentIndex >= FTokens.Count then
-          begin
-            SyntaxError('unterminated assignment.');
-            exit;
-          end;
-          dummyStr := GetCurrentToken.Value;
-          if check_number(dummyStr) then
-          begin
-            result := ParseExpression;
-            exit;
-          end else
-          if check_chars(GetCurrentToken.Value) then
-          begin
-            if GetCurrentToken.Value = 'new' then
-            begin
-              inc(FCurrentIndex);
-              if FCurrentIndex >= FTokens.Count then
-              begin
-                SyntaxError('unterminated assignment.');
-                exit;
-              end else
-              begin
-                if check_chars(GetCurrentToken.Value) then
-                begin
-                  showmessage('new ref: ' + GetCurrentToken.Value);
-                  inc(FCurrentIndex);
-                  if GetCurrentToken.Value = '(' then
-                  begin
-                    result := ParseExpression;
-                  end else
-                  begin
-                    SyntaxError('open paren expected.');
-                    exit;
-                  end;
-                end else
-                begin
-                  SyntaxError('syntax error assignment');
-                  exit;
-                end;
-              end;
-            end else
-            begin
-              Result := ParseNewInstance;
-              exit;
-            end;
-           end;
+          result := ParseAssignment;
         end else
 
         // FUNC()
