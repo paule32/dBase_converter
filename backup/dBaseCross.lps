@@ -60,21 +60,12 @@
         <UnitName Value="dBaseParser"/>
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="538"/>
-        <CursorPos X="13" Y="555"/>
+        <CursorPos X="51" Y="17"/>
         <UsageCount Value="212"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="dbaseparser.pas"/>
-        <Caret Line="13" Column="8"/>
-      </Position>
-      <Position>
-        <Filename Value="dbaseparser.pas"/>
-        <Caret Line="98" Column="3" TopLine="80"/>
-      </Position>
       <Position>
         <Filename Value="dbaseparser.pas"/>
         <Caret Line="188" Column="8" TopLine="160"/>
@@ -183,6 +174,13 @@
       <Position>
         <Filename Value="dbaseparser.pas"/>
         <Caret Line="554" Column="60" TopLine="537"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+      </Position>
+      <Position>
+        <Filename Value="dbaseparser.pas"/>
+        <Caret Line="718" TopLine="684"/>
       </Position>
     </JumpHistory>
     <RunParams>
